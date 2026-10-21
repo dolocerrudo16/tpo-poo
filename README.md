@@ -20,11 +20,3 @@ Este proyecto implementa la solución de software para la agencia de turismo **"
 * `/docs/uml`: Contiene los diagramas de casos de uso, clases (inicial y final) y secuencia en formato de imagen.
 * `/src`: Código fuente de la aplicación en Java.
 * `/test`: Pruebas unitarias sobre la lógica de negocio.
-
-
----
-
-## 🚀 Instrucciones de Instalación y Ejecución
-1. Clonar el repositorio en tu máquina local:
-   ```bash
-   git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
