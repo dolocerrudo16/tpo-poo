@@ -1,0 +1,36 @@
+@startuml secuencia-cu06-crear-reserva
+title Diagrama 1 - CU06 Crear reserva (flujo exitoso con fragmento opt)
+actor Vendedor
+participant ":Main (vista)" as Vista
+participant ":ControladorReserva" as Ctrl
+participant ":Salida" as Salida
+participant ":Reserva" as Reserva
+participant ":CalculadoraTarifa" as Calc
+
+Vendedor -> Vista : 1. crearReserva(cliente, salida, pasajeros)
+Vista -> Ctrl : 2. crearReserva(cliente, salida, vendedor, pasajeros)
+activate Ctrl
+Ctrl -> Salida : 3. calcularCupoDisponible()
+Salida --> Ctrl : 4. cupoDisponible
+opt tour de aventura (seguro obligatorio) / servicios adicionales
+  Ctrl -> Ctrl : 5. procesarExtras(salida, pasajeros)
+  note right: agrega el seguro de viaje\na cada pasajero que no lo tenga
+end
+Ctrl -> Reserva ** : 6. new Reserva(numero, cliente, salida, vendedor, politica, calculadora, hoy)
+loop por cada pasajero
+  Ctrl -> Reserva : 7. agregarPasajero(p)
+end
+Ctrl -> Reserva : 8. validarReglasDeCreacion()
+Reserva -> Calc : 9. calcularTotal(pasajeros, tour, fechaSalida, fechaReserva)
+Calc --> Reserva : 10. total
+Reserva --> Ctrl : 11. ok
+Ctrl -> Salida : 12. agregarReserva(reserva, hoy)
+Salida --> Ctrl : 13. ok (actualiza estado: COMPLETA si no queda cupo)
+Ctrl --> Vista : 14. reserva
+deactivate Ctrl
+Vista --> Vendedor : 15. Reserva creada: total y seña del 30%
+note over Ctrl, Salida
+La persistencia se hace al terminar cada operación del menú:
+GestorPersistencia.guardar(agencia, archivo)
+end note
+@enduml
