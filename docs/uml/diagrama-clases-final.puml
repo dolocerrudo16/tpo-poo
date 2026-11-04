@@ -1,0 +1,283 @@
+@startuml diagrama-clases-final
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title Diagrama de clases final - Agencia Rumbo Sur (refleja el código de la etapa 2)
+
+package "presentacion.controladores" {
+  class ControladorReserva {
+    +registrarCliente(...): Cliente
+    +crearReserva(cliente, salida, vendedor, pasajeros): Reserva
+    +registrarPago(reserva, monto, medio, cuotas): Pago
+    +reemplazarPasajero(reserva, viejo, nuevo): double
+    +cancelarReserva(reserva, motivo): double
+    +getReservasOrdenadasPorTotal(): List<Reserva>
+  }
+  class ControladorOperaciones {
+    +programarSalida(...): Salida
+    +asignarGuia(salida, guia)
+    +asignarVehiculo(salida, vehiculo)
+    +emitirListaPasajeros(salida): List<Pasajero>
+    +iniciarSalida(salida)
+    +cerrarSalida(salida)
+    +procesarVencimientos(): List<String>
+  }
+  class ControladorAdministracion {
+    +altaTour(tour)
+    +altaProveedor(...)
+    +liquidar(guia, salidas): LiquidacionGuia
+    +getReportes(): Reportes
+  }
+}
+
+package "modelo" {
+  class Agencia {
+    -tours, salidas, clientes, personal
+    -vehiculos, proveedores, servicios
+    -liquidaciones
+    +programarSalida(...): Salida
+    +registrarCliente(...): Cliente
+    +procesarVencimientos(hoy): List<String>
+    +liquidarHonorarios(guia, salidas, hoy)
+    +buscarReserva(numero): Reserva
+  }
+  class Reloj {
+    +hoy(): LocalDate
+    +fijar(fecha)
+  }
+
+  abstract class Empleado {
+    #legajo: int
+    #nombre: String
+    #documento: String
+    #telefono: String
+    +{abstract} calcularRemuneracionVariable(base): double
+  }
+  class Vendedor {
+    -porcentajeComision: double
+    +calcularRemuneracionVariable(base): double <<override>>
+  }
+  class Guia {
+    -honorarioPorDia: double
+    -idiomas: List<String>
+    -categoriasHabilitadas: Set<CategoriaTour>
+    +calcularRemuneracionVariable(base): double <<override>>
+    +calcularHonorario(dias, adicionales): double
+  }
+  class Administrador
+  class CoordinadorOperaciones
+
+  class Cliente {
+    -id: int
+    -nombre: String
+    -documento: String
+    -telefono: String
+    -email: String
+    -paisResidencia: String
+  }
+
+  class Reserva {
+    -numero: int
+    -fechaCreacion: LocalDate
+    -estado: EstadoReserva
+    -total: double
+    -temporada: Temporada
+    +agregarPasajero(p)
+    +contratarServicio(p, s)
+    +registrarPago(monto, medio, cuotas, hoy): Pago
+    +anularSiVencido(hoy): boolean
+    +cancelar(motivo, hoy): double
+    +cancelarPorAgencia(motivo, hoy): double
+    +reemplazarPasajero(viejo, nuevo, hoy): double
+  }
+  class Pasajero <<Comparable>> {
+    -nombre: String
+    -documento: String
+    -fechaNacimiento: LocalDate
+    -tipo: TipoPasajero
+    -contactoEmergencia: String
+    -restricciones: String
+    +calcularEdad(fecha): int
+  }
+  class ServicioAdicional {
+    -id: int
+    -descripcion: String
+    -precio: double
+    -tipo: TipoServicio
+  }
+  class Pago {
+    -id: int
+    -monto: double
+    -fecha: LocalDate
+    -medioPago: MedioPago
+    -cuotas: int
+    +getRecargo(): double
+  }
+  class NotaDeAjuste {
+    -id: int
+    -montoDevuelto: double
+    -montoRetenido: double
+    -fecha: LocalDate
+    -motivo: String
+    -mediosDevolucion: String
+  }
+
+  class Salida {
+    -idSalida: int
+    -fechaInicio: LocalDate
+    -fechaFin: LocalDate
+    -cupoMaximo: int
+    -estado: EstadoSalida
+    -listaPasajerosEmitida: boolean
+    -liquidada: boolean
+    +calcularCupoDisponible(): int
+    +agregarReserva(r, hoy)
+    +asignarGuia(guia, otras)
+    +asignarVehiculo(v, otras)
+    +emitirListaPasajeros(): List<Pasajero>
+    +iniciar(hoy)
+    +finalizar(hoy)
+    +cancelarSiNoAlcanzaCupoMinimo(hoy): boolean
+  }
+  class Vehiculo {
+    -patente: String
+    -capacidad: int
+    -tipo: TipoVehiculo
+  }
+
+  abstract class Tour {
+    #codigo: String
+    #nombre: String
+    #descripcion: String
+    #duracionDias: int
+    #cupoMinimo: int
+    #cupoMaximo: int
+    +{abstract} validarPasajero(p, fechaSalida): boolean
+    +{abstract} getCategoria(): CategoriaTour
+    +requiereSeguro(): boolean
+    +obtenerTarifaVigente(fecha): TarifaTemporada
+  }
+  class TourAventura {
+    -nivelDificultad: String
+    -edadMinima: int
+    +validarPasajero(p, fechaSalida): boolean <<override>>
+    +requiereSeguro(): boolean <<override>>
+  }
+  class TourCultural
+  class TourNaturaleza
+  class Actividad {
+    -dia: int
+    -orden: int
+    -horario: String
+    -descripcion: String
+    -lugar: String
+  }
+  class TarifaTemporada {
+    -temporada: Temporada
+    -vigenteDesde: LocalDate
+    -vigenteHasta: LocalDate
+    -valor: double
+  }
+  class Proveedor {
+    -nombre: String
+    -cuit: String
+    -contacto: String
+    -servicioPrestado: String
+  }
+
+  class CalculadoraTarifa {
+    +calcularTotal(pasajeros, tour, fechaSalida, fechaReserva): double
+  }
+  interface Promocion {
+    +calcularDescuento(cantPasajeros, diasAnticipacion): double
+  }
+  class PromocionAnticipada
+  class PromocionGrupo
+
+  interface PoliticaCancelacion {
+    +calcularDevolucion(totalPagado, diasAnticipacion): double
+  }
+  class CancelacionFlexible
+  class CancelacionEstricta
+  class CancelacionPorAgencia
+
+  class LiquidacionGuia {
+    -id: int
+    -fecha: LocalDate
+    +getTotal(): double
+  }
+  enum TipoPasajero {
+    ADULTO
+    MENOR
+    JUBILADO
+  }
+}
+
+package "reportes" {
+  class Reportes {
+    +ocupacionPorSalida(desde, hasta, tour)
+    +ventasPorVendedor(desde, hasta, tour, vendedor)
+    +ingresosPorTour(desde, hasta, tour)
+    +cancelaciones(desde, hasta, tour)
+  }
+}
+
+package "persistencia" {
+  class GestorPersistencia {
+    +{static} guardar(agencia, archivo)
+    +{static} cargar(archivo): Agencia
+  }
+}
+
+ControladorReserva --> Agencia
+ControladorOperaciones --> Agencia
+ControladorAdministracion --> Agencia
+ControladorAdministracion --> Reportes
+Reportes --> Agencia
+GestorPersistencia ..> Agencia
+Agencia *-- Reloj
+Agencia o-- "0..*" Tour
+Agencia o-- "0..*" Salida
+Agencia o-- "0..*" Cliente
+Agencia o-- "0..*" Empleado
+Agencia o-- "0..*" Vehiculo
+Agencia o-- "0..*" Proveedor
+Agencia o-- "0..*" ServicioAdicional
+Agencia o-- "0..*" LiquidacionGuia
+Agencia *-- CalculadoraTarifa
+Agencia --> PoliticaCancelacion : vigente
+
+Empleado <|-- Vendedor
+Empleado <|-- Guia
+Empleado <|-- Administrador
+Empleado <|-- CoordinadorOperaciones
+
+Cliente "1" -- "0..*" Reserva : titular
+Vendedor "1" -- "0..*" Reserva
+Salida "1" *-- "0..*" Reserva
+Reserva "1" *-- "1..*" Pasajero
+Pasajero "1" o-- "0..*" ServicioAdicional
+Reserva "1" *-- "0..*" Pago : crea
+Reserva "1" *-- "0..*" NotaDeAjuste : crea
+Reserva ..> CalculadoraTarifa : usa
+Reserva --> PoliticaCancelacion : aplica
+Pasajero --> TipoPasajero
+
+Salida "0..*" -- "1" Tour
+Salida "0..*" -- "0..1" Guia : guiaAsignado
+Salida "0..*" -- "0..1" Vehiculo
+
+Tour <|-- TourAventura
+Tour <|-- TourCultural
+Tour <|-- TourNaturaleza
+Tour "1" *-- "1..*" Actividad
+Tour "1" *-- "1..*" TarifaTemporada
+Actividad "0..*" --> "0..1" Proveedor : contrata
+
+CalculadoraTarifa o-- "1..*" Promocion
+Promocion <|.. PromocionAnticipada
+Promocion <|.. PromocionGrupo
+PoliticaCancelacion <|.. CancelacionFlexible
+PoliticaCancelacion <|.. CancelacionEstricta
+PoliticaCancelacion <|.. CancelacionPorAgencia
+LiquidacionGuia "0..*" --> "1" Guia
+@enduml
