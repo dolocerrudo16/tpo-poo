@@ -1,0 +1,34 @@
+@startuml secuencia-cu13-cancelar-reserva
+title Diagrama 2 - CU13 Cancelar reserva (flujo alternativo con fragmento alt)
+actor Vendedor
+participant ":Main (vista)" as Vista
+participant ":ControladorReserva" as Ctrl
+participant ":Reserva" as Reserva
+participant ":PoliticaCancelacion" as Politica
+participant ":Salida" as Salida
+
+Vendedor -> Vista : 1. solicitarCancelarReserva(numero)
+Vista -> Ctrl : 2. buscarReserva(numero)
+Ctrl --> Vista : 3. reserva
+Vista -> Reserva : 4. diasHastaLaSalida(hoy) y estimación de devolución
+Vista --> Vendedor : 5. muestra detalle, pagos y devolución estimada
+Vendedor -> Vista : 6. confirma la cancelación + motivo
+Vista -> Ctrl : 7. cancelarReserva(reserva, motivo)
+Ctrl -> Reserva : 8. cancelar(motivo, hoy)
+activate Reserva
+alt reserva vigente y salida no iniciada
+  Reserva -> Politica : 9. calcularDevolucion(totalPagado, diasAnticipacion)
+  note right: escala: >=30 días 90%, 29-15 50%,\n14-7 20%, <7 0%\n(cancelación de la agencia: 100%)
+  Politica --> Reserva : 10. importe a devolver
+  Reserva -> Reserva : 11. estado = CANCELADA\ncrea NotaDeAjuste (devuelto + retenido)
+  Reserva -> Salida : 12. actualizarEstadoSegunOcupacion() (libera lugares)
+  Reserva --> Ctrl : 13. importe devuelto
+  Ctrl --> Vista : 14. importe devuelto
+  Vista --> Vendedor : 15. Reserva cancelada + nota de ajuste
+else reserva ya cancelada o salida ya iniciada
+  Reserva --> Ctrl : 16. ReglaNegocioException
+  Ctrl --> Vista : 17. error
+  Vista --> Vendedor : 18. mensaje de error (no se modifica nada)
+end
+deactivate Reserva
+@enduml
