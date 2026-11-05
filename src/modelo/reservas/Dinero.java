@@ -1,4 +1,4 @@
-package modelo;
+package modelo.reservas;
 
 public final class Dinero {
     private Dinero() { }
