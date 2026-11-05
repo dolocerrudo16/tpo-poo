@@ -3,7 +3,6 @@ package modelo;
 import excepciones.ReglaNegocioException;
 
 public class CoordinadorOperaciones extends Empleado {
-    private static final long serialVersionUID = 1L;
 
     public CoordinadorOperaciones(int legajo, String nombre, String documento, String telefono)
             throws ReglaNegocioException {
@@ -11,8 +10,7 @@ public class CoordinadorOperaciones extends Empleado {
     }
 
     @Override
-    public double calcularRemuneracionVariable(double baseCalculo) { return 0.0; }
-
-    @Override
-    public String getRol() { return "Coordinador de operaciones"; }
+    public double calcularRemuneracionVariable(double base) {
+        return 0.0;
+    }
 }

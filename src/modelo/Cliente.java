@@ -1,16 +1,12 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
-import java.io.Serializable;
-import java.util.regex.Pattern;
 
-public class Cliente implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private static final Pattern EMAIL = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
+public class Cliente {
 
-    private final int id;
+    private int id;
     private String nombre;
-    private final String documento;
+    private String documento;
     private String telefono;
     private String email;
     private String paisResidencia;
@@ -21,28 +17,14 @@ public class Cliente implements Serializable {
         this.documento = Validaciones.texto(documento, "documento");
         this.nombre = Validaciones.texto(nombre, "nombre y apellido");
         this.telefono = Validaciones.texto(telefono, "teléfono");
-        this.email = validarEmail(email);
-        this.paisResidencia = (paisResidencia == null || paisResidencia.isBlank()) ? "Argentina" : paisResidencia.trim();
-    }
 
-    private static String validarEmail(String email) throws ReglaNegocioException {
-        String limpio = Validaciones.texto(email, "correo electrónico");
-        if (!EMAIL.matcher(limpio).matches()) {
-            throw new ReglaNegocioException("El correo electrónico no tiene un formato válido: " + limpio);
+        // Validación directa en el constructor para no agregar métodos extra
+        if (email == null || !email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            throw new ReglaNegocioException("El correo electrónico no tiene un formato válido.");
         }
-        return limpio;
-    }
+        this.email = email;
 
-    /** CU05 (flujo 3a): permite actualizar los datos de un cliente ya registrado. */
-    public void actualizarDatos(String nombre, String telefono, String email, String paisResidencia)
-            throws ReglaNegocioException {
-        String nuevoNombre = Validaciones.texto(nombre, "nombre y apellido");
-        String nuevoTelefono = Validaciones.texto(telefono, "teléfono");
-        String nuevoEmail = validarEmail(email);
-        this.nombre = nuevoNombre;
-        this.telefono = nuevoTelefono;
-        this.email = nuevoEmail;
-        if (paisResidencia != null && !paisResidencia.isBlank()) this.paisResidencia = paisResidencia.trim();
+        this.paisResidencia = (paisResidencia == null || paisResidencia.isBlank()) ? "Argentina" : paisResidencia.trim();
     }
 
     public int getId() { return id; }

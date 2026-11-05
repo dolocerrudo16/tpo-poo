@@ -1,28 +1,27 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Pasajero implements Serializable, Comparable<Pasajero> {
-    private static final long serialVersionUID = 1L;
+public class Pasajero implements Comparable<Pasajero> {
 
-    private final String nombre;
-    private final String documento;
-    private final LocalDate fechaNacimiento;
-    private final TipoPasajero tipo;
-    private final String contactoEmergencia;
-    private final String restricciones;
-    private final List<ServicioAdicional> servicios = new ArrayList<>();
+    private String nombre;
+    private String documento;
+    private LocalDate fechaNacimiento;
+    private TipoPasajero tipo;
+    private String contactoEmergencia;
+    private String restricciones;
+    private List<ServicioAdicional> servicios = new ArrayList<>();
 
     public Pasajero(String nombre, String documento, LocalDate fechaNacimiento, TipoPasajero tipo,
                     String contactoEmergencia, String restricciones) throws ReglaNegocioException {
         this.nombre = Validaciones.texto(nombre, "nombre del pasajero");
         this.documento = Validaciones.texto(documento, "documento del pasajero");
+
         if (fechaNacimiento == null) {
             throw new ReglaNegocioException("La fecha de nacimiento del pasajero es obligatoria.");
         }
@@ -30,6 +29,7 @@ public class Pasajero implements Serializable, Comparable<Pasajero> {
             throw new ReglaNegocioException("La fecha de nacimiento no puede ser futura.");
         }
         this.fechaNacimiento = fechaNacimiento;
+
         if (tipo == null) {
             throw new ReglaNegocioException("El tipo de pasajero es obligatorio.");
         }
@@ -42,23 +42,9 @@ public class Pasajero implements Serializable, Comparable<Pasajero> {
         return Period.between(fechaNacimiento, fecha).getYears();
     }
 
-    public boolean esTipoCoherente(LocalDate fechaViaje) {
-        return tipo.esCoherenteConEdad(calcularEdad(fechaViaje));
+    public List<ServicioAdicional> getServicios() {
+        return new ArrayList<>(servicios);
     }
-
-    public void agregarServicio(ServicioAdicional servicio) {
-        if (servicio == null) return;
-        if (servicio.isSeguroViaje() && tieneSeguro()) return;
-        servicios.add(servicio);
-    }
-
-    public boolean quitarServicio(ServicioAdicional servicio) { return servicios.remove(servicio); }
-
-    public boolean tieneSeguro() { return servicios.stream().anyMatch(ServicioAdicional::isSeguroViaje); }
-
-    public double getTotalServicios() { return servicios.stream().mapToDouble(ServicioAdicional::getPrecio).sum(); }
-
-    public List<ServicioAdicional> getServicios() { return new ArrayList<>(servicios); }
 
     @Override
     public int compareTo(Pasajero otro) {
@@ -74,7 +60,9 @@ public class Pasajero implements Serializable, Comparable<Pasajero> {
     }
 
     @Override
-    public int hashCode() { return Objects.hash(documento); }
+    public int hashCode() {
+        return Objects.hash(documento);
+    }
 
     public String getNombre() { return nombre; }
     public String getDocumento() { return documento; }
@@ -84,5 +72,7 @@ public class Pasajero implements Serializable, Comparable<Pasajero> {
     public String getRestricciones() { return restricciones; }
 
     @Override
-    public String toString() { return nombre + " (DNI " + documento + ", " + tipo + ")"; }
+    public String toString() {
+        return nombre + " (DNI " + documento + ", " + tipo + ")";
+    }
 }

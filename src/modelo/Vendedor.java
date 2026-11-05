@@ -3,8 +3,6 @@ package modelo;
 import excepciones.ReglaNegocioException;
 
 public class Vendedor extends Empleado {
-    private static final long serialVersionUID = 1L;
-    public static final double COMISION_POR_DEFECTO = 0.03;
 
     private double porcentajeComision;
 
@@ -18,12 +16,7 @@ public class Vendedor extends Empleado {
     }
 
     @Override
-    public double calcularRemuneracionVariable(double montoVentasConfirmadas) {
-        return Dinero.redondear(montoVentasConfirmadas * porcentajeComision);
+    public double calcularRemuneracionVariable(double base) {
+        return Dinero.redondear(base * porcentajeComision);
     }
-
-    @Override
-    public String getRol() { return "Vendedor"; }
-
-    public double getPorcentajeComision() { return porcentajeComision; }
 }
