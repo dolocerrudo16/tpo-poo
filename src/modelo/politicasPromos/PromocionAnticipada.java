@@ -1,4 +1,4 @@
-package modelo;
+package modelo.politicasPromos;
 
 import modelo.interfaces.Promocion;
 

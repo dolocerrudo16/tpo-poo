@@ -2,10 +2,10 @@ package presentacion.controladores;
 
 import java.util.List;
 
-import modelo.Agencia;
-import modelo.Guia;
-import modelo.LiquidacionGuia;
-import modelo.Salida;
+import modelo.estructura.Agencia;
+import modelo.personasRoles.Guia;
+import modelo.reservas.LiquidacionGuia;
+import modelo.viajesServicios.Salida;
 import modelo.clasesAbstractas.Tour;
 import reportes.Reportes;
 

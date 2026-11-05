@@ -1,6 +1,8 @@
-package modelo;
+package modelo.viajesServicios;
 
 import excepciones.ReglaNegocioException;
+import modelo.Validaciones;
+import modelo.personasRoles.Proveedor;
 
 public class Actividad {
 

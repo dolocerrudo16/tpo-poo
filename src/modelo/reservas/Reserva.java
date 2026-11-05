@@ -1,10 +1,15 @@
-package modelo;
+package modelo.reservas;
 
 import excepciones.ReglaNegocioException;
 import modelo.enums.EstadoReserva;
 import modelo.enums.MedioPago;
 import modelo.enums.Temporada;
 import modelo.interfaces.PoliticaCancelacion;
+import modelo.personasRoles.Cliente;
+import modelo.personasRoles.Pasajero;
+import modelo.personasRoles.Vendedor;
+import modelo.viajesServicios.Salida;
+import modelo.viajesServicios.ServicioAdicional;
 
 import java.io.Serializable;
 import java.time.LocalDate;

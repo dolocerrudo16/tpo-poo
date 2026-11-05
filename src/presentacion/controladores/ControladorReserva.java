@@ -1,7 +1,13 @@
 package presentacion.controladores;
 
-import modelo.*;
 import modelo.enums.MedioPago;
+import modelo.estructura.Agencia;
+import modelo.personasRoles.Cliente;
+import modelo.personasRoles.Pasajero;
+import modelo.personasRoles.Vendedor;
+import modelo.reservas.Pago;
+import modelo.reservas.Reserva;
+import modelo.viajesServicios.Salida;
 
 import java.util.List;
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
-package modelo;
+package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
+import modelo.Validaciones;
 
 public class Cliente {
 

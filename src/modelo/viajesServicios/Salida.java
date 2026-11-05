@@ -1,10 +1,13 @@
-package modelo;
+package modelo.viajesServicios;
 
 import excepciones.CupoExcedidoException;
 import excepciones.ReglaNegocioException;
+import modelo.reservas.Reserva;
 import modelo.clasesAbstractas.Tour;
 import modelo.enums.EstadoReserva;
 import modelo.enums.EstadoSalida;
+import modelo.personasRoles.Guia;
+import modelo.personasRoles.Pasajero;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

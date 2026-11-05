@@ -1,9 +1,19 @@
-package modelo;
+package modelo.estructura;
 
 import excepciones.ReglaNegocioException;
 import modelo.clasesAbstractas.Empleado;
 import modelo.clasesAbstractas.Tour;
 import modelo.interfaces.PoliticaCancelacion;
+import modelo.personasRoles.Cliente;
+import modelo.personasRoles.Guia;
+import modelo.personasRoles.Proveedor;
+import modelo.politicasPromos.CancelacionFlexible;
+import modelo.reservas.CalculadoraTarifa;
+import modelo.reservas.LiquidacionGuia;
+import modelo.reservas.Reserva;
+import modelo.viajesServicios.Salida;
+import modelo.viajesServicios.ServicioAdicional;
+import modelo.viajesServicios.Vehiculo;
 
 import java.io.Serializable;
 import java.time.LocalDate;

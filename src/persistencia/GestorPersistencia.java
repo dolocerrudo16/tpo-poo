@@ -1,6 +1,6 @@
 package persistencia;
 
-import modelo.Agencia;
+import modelo.estructura.Agencia;
 
 public class GestorPersistencia {
 

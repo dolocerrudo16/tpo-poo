@@ -1,6 +1,8 @@
-package modelo;
+package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
+import modelo.Dinero;
+import modelo.Validaciones;
 import modelo.clasesAbstractas.Empleado;
 import modelo.enums.CategoriaTour;
 

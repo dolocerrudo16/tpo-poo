@@ -1,9 +1,9 @@
 package modelo.clasesAbstractas;
 
 import excepciones.ReglaNegocioException;
-import modelo.Actividad;
-import modelo.Pasajero;
-import modelo.TarifaTemporada;
+import modelo.viajesServicios.Actividad;
+import modelo.personasRoles.Pasajero;
+import modelo.viajesServicios.TarifaTemporada;
 import modelo.Validaciones;
 import modelo.enums.CategoriaTour;
 

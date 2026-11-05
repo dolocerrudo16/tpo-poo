@@ -1,6 +1,7 @@
-package modelo;
+package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
+import modelo.Validaciones;
 
 //Proveedor externo (hotel, restaurante, transportista). El CUIT lo identifica.
 public class Proveedor {

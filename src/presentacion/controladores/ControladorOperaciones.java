@@ -1,6 +1,11 @@
 package presentacion.controladores;
 
-import modelo.*;
+import modelo.estructura.Agencia;
+import modelo.personasRoles.Guia;
+import modelo.personasRoles.Pasajero;
+import modelo.viajesServicios.Salida;
+import modelo.viajesServicios.Vehiculo;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;

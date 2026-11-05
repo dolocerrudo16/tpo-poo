@@ -1,8 +1,9 @@
-package modelo;
+package modelo.toursEspecificos;
 
 import excepciones.ReglaNegocioException;
 import modelo.clasesAbstractas.Tour;
 import modelo.enums.CategoriaTour;
+import modelo.personasRoles.Pasajero;
 
 import java.time.LocalDate;
 

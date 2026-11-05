@@ -1,6 +1,7 @@
-package modelo;
+package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
+import modelo.Dinero;
 import modelo.clasesAbstractas.Empleado;
 
 public class Vendedor extends Empleado {

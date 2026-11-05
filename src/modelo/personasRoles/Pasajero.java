@@ -1,6 +1,8 @@
-package modelo;
+package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
+import modelo.viajesServicios.ServicioAdicional;
+import modelo.Validaciones;
 import modelo.enums.TipoPasajero;
 
 import java.time.LocalDate;

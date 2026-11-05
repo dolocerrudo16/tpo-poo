@@ -2,8 +2,8 @@ package reportes;
 
 import java.time.LocalDate;
 
-import modelo.Agencia;
-import modelo.Vendedor;
+import modelo.estructura.Agencia;
+import modelo.personasRoles.Vendedor;
 
 /**
  * CU11 - Reportes de gestión. Todos se calculan a partir de las reservas, pagos y notas de ajuste registrados

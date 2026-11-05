@@ -1,8 +1,11 @@
-package modelo;
+package modelo.reservas;
 
 import excepciones.ReglaNegocioException;
+import modelo.politicasPromos.PromocionAnticipada;
+import modelo.politicasPromos.PromocionGrupo;
 import modelo.clasesAbstractas.Tour;
 import modelo.interfaces.Promocion;
+import modelo.personasRoles.Pasajero;
 
 import java.io.Serializable;
 import java.time.LocalDate;

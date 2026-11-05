@@ -1,4 +1,4 @@
-package modelo;
+package modelo.reservas;
 
 import excepciones.ReglaNegocioException;
 import modelo.enums.MedioPago;

@@ -1,6 +1,7 @@
-package modelo;
+package modelo.viajesServicios;
 
 import excepciones.ReglaNegocioException;
+import modelo.Validaciones;
 import modelo.enums.TipoVehiculo;
 
 public class Vehiculo {
