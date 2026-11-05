@@ -1,10 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
-import java.io.Serializable;
 
-public abstract class Empleado implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class Empleado {
 
     protected int legajo;
     protected String nombre;
@@ -23,8 +21,6 @@ public abstract class Empleado implements Serializable {
 
     public abstract double calcularRemuneracionVariable(double baseCalculo);
 
-    public abstract String getRol();
-
     public int getLegajo() { return legajo; }
     public String getNombre() { return nombre; }
     public String getDocumento() { return documento; }
@@ -32,6 +28,6 @@ public abstract class Empleado implements Serializable {
 
     @Override
     public String toString() {
-        return getRol() + " - Legajo " + legajo + ": " + nombre + " (DNI " + documento + ")";
+        return "Legajo " + legajo + ": " + nombre + " (DNI " + documento + ")";
     }
 }

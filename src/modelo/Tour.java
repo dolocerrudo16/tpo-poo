@@ -1,19 +1,12 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Tour del catálogo (clase abstracta). Cada categoría define sus propias reglas de validación de
- * pasajeros sobrescribiendo {@link #validarPasajero(Pasajero, LocalDate)} (principios OCP y LSP).
- */
-public abstract class Tour implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+public abstract class Tour {
     protected String codigo;
     protected String nombre;
     protected String descripcion;
@@ -36,13 +29,13 @@ public abstract class Tour implements Serializable {
         this.cupoMaximo = cupoMaximo;
     }
 
-    /** Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP). */
+    //Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP).
     public abstract boolean validarPasajero(Pasajero p, LocalDate fechaSalida);
 
     public abstract CategoriaTour getCategoria();
 
-    /** RN: el seguro de viaje es obligatorio en los tours que lo requieran (aventura). */
-    public boolean requiereSeguro() { return false; }
+    //RN: el seguro de viaje es obligatorio en los tours que lo requieran (aventura).
+    public abstract boolean requiereSeguro();
 
     public void agregarActividad(Actividad a) throws ReglaNegocioException {
         if (a == null) throw new ReglaNegocioException("La actividad es obligatoria.");
@@ -53,7 +46,7 @@ public abstract class Tour implements Serializable {
         itinerario.sort(Comparator.comparingInt(Actividad::getDia).thenComparingInt(Actividad::getOrden));
     }
 
-    /** No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa. */
+    // No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa.
     public void agregarTarifa(TarifaTemporada t) throws ReglaNegocioException {
         if (t == null) throw new ReglaNegocioException("La tarifa es obligatoria.");
         for (TarifaTemporada existente : tarifas) {
@@ -65,17 +58,13 @@ public abstract class Tour implements Serializable {
         tarifas.sort(Comparator.comparing(TarifaTemporada::getVigenteDesde));
     }
 
-    /** CU07 (flujo 1a): si no hay tarifa vigente para la fecha de la salida, no se puede cotizar. */
+    //CU07 (flujo 1a): si no hay tarifa vigente para la fecha de la salida, no se puede cotizar.
     public TarifaTemporada obtenerTarifaVigente(LocalDate fechaSalida) throws ReglaNegocioException {
         return tarifas.stream()
                 .filter(t -> t.cubre(fechaSalida))
                 .findFirst()
                 .orElseThrow(() -> new ReglaNegocioException(
                         "El tour " + codigo + " no tiene una tarifa vigente para la fecha " + fechaSalida + "."));
-    }
-
-    public void setDescripcion(String descripcion) throws ReglaNegocioException {
-        this.descripcion = Validaciones.texto(descripcion, "descripción");
     }
 
     public String getCodigo() { return codigo; }
