@@ -1,15 +1,14 @@
 package modelo;
 
-public class PromocionGrupo implements Promocion {
+import java.io.Serializable;
+
+public class PromocionGrupo implements Promocion, Serializable {
     private static final long serialVersionUID = 1L;
-    private static final int PASAJEROS_MINIMOS = 6;
-    private static final double DESCUENTO = 0.10;
 
     @Override
-    public String getNombre() { return "Grupo (10%)"; }
-
-    @Override
-    public double calcularDescuento(int cantidadPasajeros, long diasAnticipacion) {
-        return cantidadPasajeros >= PASAJEROS_MINIMOS ? DESCUENTO : 0.0;
+    public double calcularDescuento(int cantPasajeros, long diasAnticipacion) {
+        // RN08: 6 o más pasajeros, 10% de descuento
+        return cantPasajeros >= 6 ? 0.10 : 0.0;
     }
 }
+
