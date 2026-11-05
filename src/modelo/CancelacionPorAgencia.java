@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.interfaces.PoliticaCancelacion;
+
 import java.io.Serializable;
 
 //RN13: si la cancelación la provoca la agencia, se devuelve siempre el 100% de lo pagado.

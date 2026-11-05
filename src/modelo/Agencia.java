@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.interfaces.PoliticaCancelacion;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;

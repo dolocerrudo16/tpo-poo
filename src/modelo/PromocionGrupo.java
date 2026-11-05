@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.interfaces.Promocion;
+
 import java.io.Serializable;
 
 public class PromocionGrupo implements Promocion, Serializable {

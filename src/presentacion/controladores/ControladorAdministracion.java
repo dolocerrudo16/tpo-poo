@@ -1,24 +1,13 @@
 package presentacion.controladores;
 
-import excepciones.ReglaNegocioException;
 import java.util.List;
-import modelo.Actividad;
+
 import modelo.Agencia;
 import modelo.Guia;
 import modelo.LiquidacionGuia;
-import modelo.PoliticaCancelacion;
-import modelo.Proveedor;
 import modelo.Salida;
-import modelo.TarifaTemporada;
 import modelo.Tour;
-import modelo.TipoVehiculo;
-import modelo.Vehiculo;
-import modelo.Vendedor;
 import reportes.Reportes;
-
-import modelo.*;
-import reportes.Reportes;
-import java.util.List;
 
 public class ControladorAdministracion {
 

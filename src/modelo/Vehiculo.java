@@ -1,6 +1,7 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.TipoVehiculo;
 
 public class Vehiculo {
 

@@ -2,6 +2,9 @@ package modelo;
 
 import excepciones.CupoExcedidoException;
 import excepciones.ReglaNegocioException;
+import modelo.enums.EstadoReserva;
+import modelo.enums.EstadoSalida;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;

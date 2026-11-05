@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.MedioPago;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 

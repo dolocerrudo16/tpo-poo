@@ -1,6 +1,11 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.EstadoReserva;
+import modelo.enums.MedioPago;
+import modelo.enums.Temporada;
+import modelo.interfaces.PoliticaCancelacion;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -1,6 +1,8 @@
 package presentacion.controladores;
 
 import modelo.*;
+import modelo.enums.MedioPago;
+
 import java.util.List;
 import java.util.ArrayList;
 

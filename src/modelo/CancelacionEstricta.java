@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.interfaces.PoliticaCancelacion;
+
 import java.io.Serializable;
 
 public class CancelacionEstricta implements PoliticaCancelacion, Serializable {

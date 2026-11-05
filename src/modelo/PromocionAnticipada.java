@@ -1,5 +1,7 @@
 package modelo;
 
+import modelo.interfaces.Promocion;
+
 import java.io.Serializable;
 
 public class PromocionAnticipada implements Promocion, Serializable {

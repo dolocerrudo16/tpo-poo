@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.Temporada;
+
 import java.time.LocalDate;
 
 public class TarifaTemporada {

@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.CategoriaTour;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;

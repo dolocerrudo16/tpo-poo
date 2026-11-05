@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.TipoPasajero;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;

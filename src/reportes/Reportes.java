@@ -1,20 +1,8 @@
 package reportes;
 
-import excepciones.ReglaNegocioException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+
 import modelo.Agencia;
-import modelo.EstadoReserva;
-import modelo.EstadoSalida;
-import modelo.Dinero;
-import modelo.NotaDeAjuste;
-import modelo.Pago;
-import modelo.Reserva;
-import modelo.Salida;
 import modelo.Vendedor;
 
 /**
@@ -26,7 +14,6 @@ import modelo.Vendedor;
  * período (incluye el recargo por cuotas); las cancelaciones incluyen reservas CANCELADA y ANULADA.
  */
 import modelo.*;
-import java.time.LocalDate;
 
 public class Reportes {
 

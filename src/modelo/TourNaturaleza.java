@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.enums.CategoriaTour;
+
 import java.time.LocalDate;
 
 public class TourNaturaleza extends Tour {
