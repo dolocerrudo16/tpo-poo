@@ -1,18 +1,17 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
-import java.io.Serializable;
 
-/** Actividad del itinerario de un tour (visita, traslado, comida, alojamiento). El proveedor es opcional. */
-public class Actividad implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Actividad {
 
-    private final int dia;
-    private final int orden;
-    private final String horario;
-    private final String descripcion;
-    private final String lugar;
-    private final Proveedor proveedor;
+    private int dia;
+    private int orden;
+    private String horario;
+    private String descripcion;
+    private String lugar;
+
+    // Relación 0..1 con Proveedor (el diagrama marca que Actividad "contrata" Proveedor)
+    private Proveedor proveedor;
 
     public Actividad(int dia, int orden, String horario, String descripcion, String lugar, Proveedor proveedor)
             throws ReglaNegocioException {
@@ -26,16 +25,11 @@ public class Actividad implements Serializable {
         this.proveedor = proveedor;
     }
 
+    // Getters indispensables
     public int getDia() { return dia; }
     public int getOrden() { return orden; }
     public String getHorario() { return horario; }
     public String getDescripcion() { return descripcion; }
     public String getLugar() { return lugar; }
     public Proveedor getProveedor() { return proveedor; }
-
-    @Override
-    public String toString() {
-        return "Día " + dia + " #" + orden + " " + horario + " - " + descripcion + " (" + lugar + ")"
-                + (proveedor != null ? " [" + proveedor.getNombre() + "]" : "");
-    }
 }
