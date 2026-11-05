@@ -79,4 +79,10 @@ public class Pasajero implements Comparable<Pasajero> {
     public String toString() {
         return nombre + " (DNI " + documento + ", " + tipo + ")";
     }
+
+    public void agregarServicio(ServicioAdicional s) {
+        if (s != null) {
+            this.servicios.add(s);
+        }
+    }
 }

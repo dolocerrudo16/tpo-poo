@@ -32,4 +32,14 @@ public class Guia extends Empleado {
     public double calcularHonorario(int dias, double adicionalesVendidos) {
         return Dinero.redondear((honorarioPorDia * dias) + calcularRemuneracionVariable(adicionalesVendidos));
     }
+
+    public boolean estaHabilitadoPara(CategoriaTour categoria) {
+        return categoriasHabilitadas != null && categoriasHabilitadas.contains(categoria);
+    }
+
+    public void habilitarCategoria(CategoriaTour categoria) {
+        if (categoria != null) {
+            categoriasHabilitadas.add(categoria);
+        }
+    }
 }

@@ -80,6 +80,18 @@ public class Reserva implements Serializable {
         return 0.0; // Retorna la diferencia de tarifa
     }
 
+    public boolean ocupaLugar() {
+        return this.estado != EstadoReserva.CANCELADA && this.estado != EstadoReserva.ANULADA;
+    }
+
+    public int getCantidadLugaresOcupados() {
+        return pasajeros != null ? pasajeros.size() : 0;
+    }
+
+    public List<Pasajero> getPasajeros() {
+        return new ArrayList<>(pasajeros);
+    }
+
     // Getters
     public int getNumero() { return numero; }
     public LocalDate getFechaCreacion() { return fechaCreacion; }

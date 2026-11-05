@@ -1,11 +1,11 @@
 package modelo.clasesAbstractas;
 
-import excepciones.ReglaNegocioException;
-import modelo.viajesServicios.Actividad;
-import modelo.personasRoles.Pasajero;
-import modelo.viajesServicios.TarifaTemporada;
 import modelo.Validaciones;
 import modelo.enums.CategoriaTour;
+import modelo.personasRoles.Pasajero;
+import modelo.viajesServicios.Actividad;
+import modelo.viajesServicios.TarifaTemporada;
+import excepciones.ReglaNegocioException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,12 +35,12 @@ public abstract class Tour {
         this.cupoMaximo = cupoMaximo;
     }
 
-    //Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP).
+    /** Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP). */
     public abstract boolean validarPasajero(Pasajero p, LocalDate fechaSalida);
 
     public abstract CategoriaTour getCategoria();
 
-    //RN: el seguro de viaje es obligatorio en los tours que lo requieran (aventura).
+    /** RN: el seguro de viaje es obligatorio en los tours que lo requieran (aventura). */
     public abstract boolean requiereSeguro();
 
     public void agregarActividad(Actividad a) throws ReglaNegocioException {
@@ -52,7 +52,7 @@ public abstract class Tour {
         itinerario.sort(Comparator.comparingInt(Actividad::getDia).thenComparingInt(Actividad::getOrden));
     }
 
-    // No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa.
+    /** No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa. */
     public void agregarTarifa(TarifaTemporada t) throws ReglaNegocioException {
         if (t == null) throw new ReglaNegocioException("La tarifa es obligatoria.");
         for (TarifaTemporada existente : tarifas) {
@@ -64,7 +64,7 @@ public abstract class Tour {
         tarifas.sort(Comparator.comparing(TarifaTemporada::getVigenteDesde));
     }
 
-    //CU07 (flujo 1a): si no hay tarifa vigente para la fecha de la salida, no se puede cotizar.
+    /** CU07 (flujo 1a): si no hay tarifa vigente para la fecha de la salida, no se puede cotizar. */
     public TarifaTemporada obtenerTarifaVigente(LocalDate fechaSalida) throws ReglaNegocioException {
         return tarifas.stream()
                 .filter(t -> t.cubre(fechaSalida))

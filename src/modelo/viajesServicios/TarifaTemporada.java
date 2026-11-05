@@ -28,11 +28,11 @@ public class TarifaTemporada {
     }
 
     // Métodos internos (package-private) para que Tour los use sin figurar en el UML público
-    boolean cubre(LocalDate fecha) {
+    public boolean cubre(LocalDate fecha) {
         return !fecha.isBefore(vigenteDesde) && !fecha.isAfter(vigenteHasta);
     }
 
-    boolean seSuperponeCon(TarifaTemporada otra) {
+    public boolean seSuperponeCon(TarifaTemporada otra) {
         return !vigenteDesde.isAfter(otra.vigenteHasta) && !vigenteHasta.isBefore(otra.vigenteDesde);
     }
 
