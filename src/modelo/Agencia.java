@@ -1,6 +1,8 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.clasesAbstractas.Empleado;
+import modelo.clasesAbstractas.Tour;
 import modelo.interfaces.PoliticaCancelacion;
 
 import java.io.Serializable;

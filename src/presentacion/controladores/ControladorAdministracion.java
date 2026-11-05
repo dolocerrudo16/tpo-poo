@@ -6,7 +6,7 @@ import modelo.Agencia;
 import modelo.Guia;
 import modelo.LiquidacionGuia;
 import modelo.Salida;
-import modelo.Tour;
+import modelo.clasesAbstractas.Tour;
 import reportes.Reportes;
 
 public class ControladorAdministracion {

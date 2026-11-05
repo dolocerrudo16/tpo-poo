@@ -1,6 +1,7 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.clasesAbstractas.Tour;
 import modelo.enums.CategoriaTour;
 
 import java.time.LocalDate;

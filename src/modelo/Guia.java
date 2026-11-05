@@ -1,6 +1,7 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.clasesAbstractas.Empleado;
 import modelo.enums.CategoriaTour;
 
 import java.util.ArrayList;

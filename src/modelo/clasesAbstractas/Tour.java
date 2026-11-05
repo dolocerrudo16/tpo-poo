@@ -1,6 +1,10 @@
-package modelo;
+package modelo.clasesAbstractas;
 
 import excepciones.ReglaNegocioException;
+import modelo.Actividad;
+import modelo.Pasajero;
+import modelo.TarifaTemporada;
+import modelo.Validaciones;
 import modelo.enums.CategoriaTour;
 
 import java.time.LocalDate;

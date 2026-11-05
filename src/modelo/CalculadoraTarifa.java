@@ -1,6 +1,7 @@
 package modelo;
 
 import excepciones.ReglaNegocioException;
+import modelo.clasesAbstractas.Tour;
 import modelo.interfaces.Promocion;
 
 import java.io.Serializable;

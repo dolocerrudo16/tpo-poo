@@ -13,7 +13,7 @@ import modelo.Vendedor;
  * consideran reservas CONFIRMADA/FINALIZADA creadas en el período; los ingresos suman lo cobrado en pagos del
  * período (incluye el recargo por cuotas); las cancelaciones incluyen reservas CANCELADA y ANULADA.
  */
-import modelo.*;
+import modelo.clasesAbstractas.Tour;
 
 public class Reportes {
 

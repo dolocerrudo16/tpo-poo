@@ -1,6 +1,7 @@
-package modelo;
+package modelo.clasesAbstractas;
 
 import excepciones.ReglaNegocioException;
+import modelo.Validaciones;
 
 public abstract class Empleado {
 

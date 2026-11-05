@@ -2,6 +2,7 @@ package modelo;
 
 import excepciones.CupoExcedidoException;
 import excepciones.ReglaNegocioException;
+import modelo.clasesAbstractas.Tour;
 import modelo.enums.EstadoReserva;
 import modelo.enums.EstadoSalida;
 
