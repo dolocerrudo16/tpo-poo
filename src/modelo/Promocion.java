@@ -1,9 +1,5 @@
 package modelo;
 
-import java.io.Serializable;
-
-public interface Promocion extends Serializable {
-    String getNombre();
-
-    double calcularDescuento(int cantidadPasajeros, long diasAnticipacion);
+public interface Promocion {
+    double calcularDescuento(int cantPasajeros, long diasAnticipacion);
 }
