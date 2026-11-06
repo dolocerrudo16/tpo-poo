@@ -36,28 +36,34 @@ public class Agencia implements Serializable {
     private CalculadoraTarifa calculadora = new CalculadoraTarifa();
     private PoliticaCancelacion politicaCancelacion = new CancelacionFlexible();
 
-    public Agencia() {}
+    public Agencia() {
+    }
 
-    public Salida programarSalida(String codigoTour, LocalDate inicio, LocalDate fin, int cupoMaximo) throws ReglaNegocioException {
-        // Lógica para instanciar y agregar Salida
-        return null;
+    public Salida programarSalida(String codigoTour, LocalDate inicio, LocalDate fin, int cupoMaximo, Tour tour, LocalDate hoy) throws ReglaNegocioException {
+        // El ID puede ser el tamaño de la lista + 1
+        int idSalida = salidas.size() + 1;
+        Salida nuevaSalida = new Salida(idSalida, inicio, fin, cupoMaximo, tour, hoy);
+        salidas.add(nuevaSalida);
+        return nuevaSalida;
     }
 
     public Cliente registrarCliente(String nombre, String documento, String telefono, String email, String pais) throws ReglaNegocioException {
-        // Lógica para instanciar y agregar Cliente
-        return null;
+        int idCliente = clientes.size() + 1;
+        Cliente nuevoCliente = new Cliente(idCliente, nombre, documento, telefono, email, pais);
+        clientes.add(nuevoCliente);
+        return nuevoCliente;
     }
 
-    public List<String> procesarVencimientos(LocalDate hoy) {
-        return new ArrayList<>();
+    // Agrega estos Getters fundamentales para que los controladores puedan consultar los datos
+    public List<Salida> getSalidas() {
+        return salidas;
     }
 
-    public LiquidacionGuia liquidarHonorarios(Guia guia, List<Salida> salidasLiquidar, LocalDate hoy) {
-        // Lógica de liquidación
-        return null;
-    }
-
-    public Reserva buscarReserva(int numero) {
-        return null;
+    public List<Reserva> getTodasLasReservas() {
+        List<Reserva> todas = new ArrayList<>();
+        for (Salida s : salidas) {
+            todas.addAll(s.getReservas());
+        }
+        return todas;
     }
 }

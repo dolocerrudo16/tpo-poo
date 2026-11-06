@@ -22,12 +22,14 @@ public class ControladorOperaciones {
         return null;
     }
 
-    public void asignarGuia(Salida salida, Guia guia) {
-        // Lógica para asignar
+    public void asignarGuia(Salida salida, Guia guia) throws Exception {
+        // Pasa lista completa de salidas de la agencia para que Salida verifique superposiciones
+        salida.asignarGuia(guia, agencia.getSalidas());
     }
 
-    public void asignarVehiculo(Salida salida, Vehiculo vehiculo) {
-        // Lógica para asignar
+    public void asignarVehiculo(Salida salida, Vehiculo vehiculo) throws Exception {
+        // Lo mismo para el vehículo
+        salida.asignarVehiculo(vehiculo, agencia.getSalidas());
     }
 
     public List<Pasajero> emitirListaPasajeros(Salida salida) {

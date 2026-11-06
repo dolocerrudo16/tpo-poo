@@ -1,6 +1,7 @@
 package reportes;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import modelo.estructura.Agencia;
 import modelo.personasRoles.Vendedor;
@@ -14,6 +15,7 @@ import modelo.personasRoles.Vendedor;
  * período (incluye el recargo por cuotas); las cancelaciones incluyen reservas CANCELADA y ANULADA.
  */
 import modelo.clasesAbstractas.Tour;
+import modelo.reservas.Reserva;
 
 public class Reportes {
 
@@ -27,6 +29,34 @@ public class Reportes {
     }
 
     public void ventasPorVendedor(LocalDate desde, LocalDate hasta, Tour tour, Vendedor vendedor) {
+        System.out.println("--- Reporte de Ventas por Vendedor ---");
+        System.out.println("Vendedor: " + vendedor.getNombre());
+
+        int cantidadReservas = 0;
+        double totalVendido = 0.0;
+
+        List<Reserva> reservas = agencia.getTodasLasReservas();
+
+        for (Reserva r : reservas) {
+            // Filtrar por estado CONFIRMADA o FINALIZADA
+            if (r.getEstado() == modelo.enums.EstadoReserva.CONFIRMADA || r.getEstado() == modelo.enums.EstadoReserva.FINALIZADA) {
+                // Filtrar por fechas
+                if (!r.getFechaCreacion().isBefore(desde) && !r.getFechaCreacion().isAfter(hasta)) {
+                    // Filtrar por vendedor y tour
+                    // (Si el tour pasado por parámetro es null, ignora el filtro de tour)
+                    if (r.getSalida().getTour().equals(tour) || tour == null) {
+                        cantidadReservas++;
+                        totalVendido += r.getTotal();
+                    }
+                }
+            }
+        }
+
+        double comisionEstimada = vendedor.calcularRemuneracionVariable(totalVendido);
+
+        System.out.println("Reservas confirmadas: " + cantidadReservas);
+        System.out.println("Total vendido: $" + totalVendido);
+        System.out.println("Comisión estimada (3%): $" + comisionEstimada);
     }
 
     public void ingresosPorTour(LocalDate desde, LocalDate hasta, Tour tour) {
