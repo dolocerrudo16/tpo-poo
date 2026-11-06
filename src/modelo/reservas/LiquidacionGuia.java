@@ -8,14 +8,16 @@ public class LiquidacionGuia implements Serializable {
 
     private int id;
     private LocalDate fecha;
+    private double totalAbonado;
 
-    public LiquidacionGuia(int id, LocalDate fecha) {
+    public LiquidacionGuia(int id, LocalDate fecha, double totalAbonado) {
         this.id = id;
         this.fecha = fecha;
+        this.totalAbonado = Dinero.redondear(totalAbonado);
     }
 
     public double getTotal() {
-        return 0.0;
+        return totalAbonado;
     }
 
     public int getId() { return id; }

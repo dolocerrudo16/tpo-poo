@@ -64,7 +64,7 @@ public class Salida {
         if (r == null) throw new ReglaNegocioException("La reserva es obligatoria.");
         if (r.getSalida() != this) throw new ReglaNegocioException("La reserva pertenece a otra salida.");
 
-        long dias = ChronoUnit.DAYS.between(hoy, fechaInicio);
+        long dias = fechaInicio.toEpochDay() - hoy.toEpochDay();
         if (dias < 10) {
             throw new ReglaNegocioException("Ya no se aceptan reservas (fuera de término).");
         }
@@ -80,6 +80,15 @@ public class Salida {
         if (guia == null) throw new ReglaNegocioException("El guía es obligatorio.");
         if (!guia.estaHabilitadoPara(tour.getCategoria())) {
             throw new ReglaNegocioException("El guía no está habilitado para esta categoría de tour.");
+        }
+
+        for (Salida otra : otras) {
+            if (otra != this && otra.getGuiaAsignado() != null && otra.getGuiaAsignado().equals(guia)) {
+                // Hay superposición si el inicio de una <= fin de la otra y viceversa
+                if (!this.fechaInicio.isAfter(otra.fechaFin) && !this.fechaFin.isBefore(otra.fechaInicio)) {
+                    throw new ReglaNegocioException("El guía ya tiene la salida " + otra.getIdSalida() + " superpuesta en esas fechas.");
+                }
+            }
         }
         this.guiaAsignado = guia;
     }
@@ -118,7 +127,7 @@ public class Salida {
     }
 
     public boolean cancelarSiNoAlcanzaCupoMinimo(LocalDate hoy) throws ReglaNegocioException {
-        long dias = ChronoUnit.DAYS.between(hoy, fechaInicio);
+        long dias = fechaInicio.toEpochDay() - hoy.toEpochDay();
         if (dias > 7 || dias <= 0) return false;
         this.estado = EstadoSalida.CANCELADA;
         return true;

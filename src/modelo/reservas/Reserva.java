@@ -44,7 +44,6 @@ public class Reserva implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
-    // métodos del uml
     public void agregarPasajero(Pasajero p) {
         if (p != null) pasajeros.add(p);
     }
@@ -74,10 +73,20 @@ public class Reserva implements Serializable {
         return 0.0;
     }
 
-    public double reemplazarPasajero(Pasajero viejo, Pasajero nuevo, LocalDate hoy) {
+    public double reemplazarPasajero(Pasajero viejo, Pasajero nuevo, LocalDate hoy) throws ReglaNegocioException {
+        long diasFaltantes = salida.getFechaInicio().toEpochDay() - hoy.toEpochDay();
+        if (diasFaltantes < 3) {
+            throw new ReglaNegocioException("Faltan menos de 3 días para la salida. No se permiten cambios de pasajeros.");
+        }
+
         int idx = pasajeros.indexOf(viejo);
-        if (idx >= 0) pasajeros.set(idx, nuevo);
-        return 0.0; // Retorna la diferencia de tarifa
+        if (idx >= 0) {
+            pasajeros.set(idx, nuevo);
+        } else {
+            throw new ReglaNegocioException("El pasajero a reemplazar no existe en la reserva.");
+        }
+
+        return 0.0;
     }
 
     public boolean ocupaLugar() {
