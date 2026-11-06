@@ -89,9 +89,22 @@ public class Reserva implements Serializable {
         return false;
     }
 
+    // Calcula la penalidad según los días de anticipación y crea la nota de ajuste
     public double cancelar(String motivo, LocalDate hoy) {
+        if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA) {
+            return 0.0;
+        }
+
+        long diasAnticipacion = java.time.temporal.ChronoUnit.DAYS.between(hoy, salida.getFechaInicio());
+        double totalDevolver = politicaCancelacion.calcularDevolucion(getTotalPagado(), diasAnticipacion);
+        double retencion = getTotalPagado() - totalDevolver;
+
         this.estado = EstadoReserva.CANCELADA;
-        return 0.0; // Retorna la devolución calculada
+
+        NotaDeAjuste nota = new NotaDeAjuste(notasDeAjuste.size() + 1, totalDevolver, retencion, hoy, motivo, "Mismo medio de pago");
+        notasDeAjuste.add(nota);
+
+        return totalDevolver;
     }
 
     public double cancelarPorAgencia(String motivo, LocalDate hoy) {
@@ -116,8 +129,9 @@ public class Reserva implements Serializable {
         return totalDevolver;
     }
 
+    // Valida que falten más de 3 días y hace el cambiazo del objeto pasajero
     public double reemplazarPasajero(Pasajero viejo, Pasajero nuevo, LocalDate hoy) throws ReglaNegocioException {
-        long diasFaltantes = salida.getFechaInicio().toEpochDay() - hoy.toEpochDay();
+        long diasFaltantes = java.time.temporal.ChronoUnit.DAYS.between(hoy, salida.getFechaInicio());
         if (diasFaltantes < 3) {
             throw new ReglaNegocioException("Faltan menos de 3 días para la salida. No se permiten cambios de pasajeros.");
         }
@@ -125,11 +139,10 @@ public class Reserva implements Serializable {
         int idx = pasajeros.indexOf(viejo);
         if (idx >= 0) {
             pasajeros.set(idx, nuevo);
+            return 0.0;
         } else {
             throw new ReglaNegocioException("El pasajero a reemplazar no existe en la reserva.");
         }
-
-        return 0.0;
     }
 
     public boolean ocupaLugar() {

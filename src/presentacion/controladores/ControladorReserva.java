@@ -9,10 +9,10 @@ import modelo.reservas.Pago;
 import modelo.reservas.Reserva;
 import modelo.viajesServicios.Salida;
 import modelo.viajesServicios.ServicioAdicional;
+import excepciones.ReglaNegocioException;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.ArrayList;
 
 public class ControladorReserva {
 
@@ -22,8 +22,8 @@ public class ControladorReserva {
         this.agencia = agencia;
     }
 
-    public Cliente registrarCliente(String nombre, String documento, String telefono, String email, String pais) {
-        return null;
+    public Cliente registrarCliente(String nombre, String documento, String telefono, String email, String pais) throws ReglaNegocioException {
+        return agencia.registrarCliente(nombre, documento, telefono, email, pais);
     }
 
     public Reserva crearReserva(Cliente cliente, Salida salida, Vendedor vendedor, List<Pasajero> pasajeros, LocalDate hoy) throws Exception {
@@ -56,19 +56,15 @@ public class ControladorReserva {
         return nuevaReserva;
     }
 
-    public Pago registrarPago(Reserva reserva, double monto, MedioPago medio, int cuotas) {
-        return null;
+    public Pago registrarPago(Reserva reserva, double monto, MedioPago medio, int cuotas, LocalDate hoy) throws ReglaNegocioException {
+        return reserva.registrarPago(monto, medio, cuotas, hoy);
     }
 
-    public double reemplazarPasajero(Reserva reserva, Pasajero viejo, Pasajero nuevo) {
-        return 0.0;
+    public double reemplazarPasajero(Reserva reserva, Pasajero viejo, Pasajero nuevo, LocalDate hoy) throws ReglaNegocioException {
+        return reserva.reemplazarPasajero(viejo, nuevo, hoy);
     }
 
-    public double cancelarReserva(Reserva reserva, String motivo) {
-        return 0.0;
-    }
-
-    public List<Reserva> getReservasOrdenadasPorTotal() {
-        return new ArrayList<>();
+    public double cancelarReserva(Reserva reserva, String motivo, LocalDate hoy) {
+        return reserva.cancelar(motivo, hoy);
     }
 }

@@ -26,6 +26,16 @@ public class Reportes {
     }
 
     public void ocupacionPorSalida(LocalDate desde, LocalDate hasta, Tour tour) {
+        System.out.println("\nReporte de Ocupación por Salida");
+        for (modelo.viajesServicios.Salida s : agencia.getSalidas()) {
+            if (!s.getFechaInicio().isBefore(desde) && !s.getFechaInicio().isAfter(hasta)) {
+                if (tour == null || s.getTour().equals(tour)) {
+                    int lugaresOcupados = s.getCupoMaximo() - s.calcularCupoDisponible();
+                    System.out.println("Salida #" + s.getIdSalida() + " | Tour: " + s.getTour().getNombre() +
+                            " | Ocupación: " + lugaresOcupados + "/" + s.getCupoMaximo() + " lugares");
+                }
+            }
+        }
     }
 
     public void ventasPorVendedor(LocalDate desde, LocalDate hasta, Tour tour, Vendedor vendedor) {
@@ -59,9 +69,40 @@ public class Reportes {
         System.out.println("Comisión estimada (3%): $" + comisionEstimada);
     }
 
+    // Calcula sumando los pagos efectuados de reservas NO canceladas
     public void ingresosPorTour(LocalDate desde, LocalDate hasta, Tour tour) {
+        System.out.println("\nReporte de Ingresos por Tour");
+        double totalIngresos = 0.0;
+
+        for (Reserva r : agencia.getTodasLasReservas()) {
+            if (r.getEstado() != modelo.enums.EstadoReserva.CANCELADA && r.getEstado() != modelo.enums.EstadoReserva.ANULADA) {
+                if (tour == null || r.getSalida().getTour().equals(tour)) {
+                    for (modelo.reservas.Pago p : r.getPagos()) {
+                        // Filtramos por la fecha en que ingresó el pago
+                        if (!p.getFecha().isBefore(desde) && !p.getFecha().isAfter(hasta)) {
+                            totalIngresos += (p.getMonto() + p.getRecargo());
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("Total de ingresos percibidos en el período: " + modelo.reservas.Dinero.formatear(totalIngresos));
     }
 
     public void cancelaciones(LocalDate desde, LocalDate hasta, Tour tour) {
+        System.out.println("\nReporte de Cancelaciones");
+        int cantCanceladas = 0;
+
+        for (Reserva r : agencia.getTodasLasReservas()) {
+            if (r.getEstado() == modelo.enums.EstadoReserva.CANCELADA || r.getEstado() == modelo.enums.EstadoReserva.ANULADA) {
+                // Filtramos por la fecha en que se creó la reserva (para saber de ese período cuántas se cayeron)
+                if (!r.getFechaCreacion().isBefore(desde) && !r.getFechaCreacion().isAfter(hasta)) {
+                    if (tour == null || r.getSalida().getTour().equals(tour)) {
+                        cantCanceladas++;
+                    }
+                }
+            }
+        }
+        System.out.println("Total de reservas canceladas/anuladas: " + cantCanceladas);
     }
 }
