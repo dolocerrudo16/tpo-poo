@@ -52,9 +52,35 @@ public class Reserva implements Serializable {
         if (pasajeros.contains(p) && s != null) p.agregarServicio(s);
     }
 
+    // establece el total de la reserva tras calcularlo
+    public void setTotal(double total) {
+        this.total = Dinero.redondear(total);
+    }
+
+    public double getTotalPagado() {
+        double sum = 0.0;
+        for (Pago p : pagos) {
+            sum += p.getMonto();
+        }
+        return sum;
+    }
     public Pago registrarPago(double monto, MedioPago medio, int cuotas, LocalDate hoy) throws ReglaNegocioException {
+        if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA) {
+            throw new ReglaNegocioException("No se pueden registrar pagos en una reserva cancelada o anulada.");
+        }
+
         Pago nuevo = new Pago(pagos.size() + 1, monto, hoy, medio, cuotas);
         pagos.add(nuevo);
+
+        // RN07: Si está PENDIENTE y el total pagado alcanza el 30% del total, pasa a CONFIRMADA
+        if (this.estado == EstadoReserva.PENDIENTE) {
+            double pagado = getTotalPagado();
+            double minimoRequerido = Dinero.redondear(this.total * 0.30);
+
+            if (pagado >= minimoRequerido) {
+                this.estado = EstadoReserva.CONFIRMADA;
+            }
+        }
         return nuevo;
     }
 
@@ -69,8 +95,25 @@ public class Reserva implements Serializable {
     }
 
     public double cancelarPorAgencia(String motivo, LocalDate hoy) {
+        if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA) {
+            return 0.0;
+        }
         this.estado = EstadoReserva.CANCELADA;
-        return 0.0;
+
+        // RN13: Si la cancelación la provoca la agencia, se devuelve siempre el 100% de lo pagado.
+        double totalDevolver = getTotalPagado();
+
+        NotaDeAjuste nota = new NotaDeAjuste(
+                notasDeAjuste.size() + 1,
+                totalDevolver,
+                0.0, // retención 0
+                hoy,
+                motivo,
+                "Mismo medio de pago"
+        );
+        notasDeAjuste.add(nota);
+
+        return totalDevolver;
     }
 
     public double reemplazarPasajero(Pasajero viejo, Pasajero nuevo, LocalDate hoy) throws ReglaNegocioException {

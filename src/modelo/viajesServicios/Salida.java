@@ -64,17 +64,25 @@ public class Salida implements Serializable {
     public void agregarReserva(Reserva r, LocalDate hoy) throws ReglaNegocioException {
         if (r == null) throw new ReglaNegocioException("La reserva es obligatoria.");
         if (r.getSalida() != this) throw new ReglaNegocioException("La reserva pertenece a otra salida.");
+        if (this.estado == EstadoSalida.COMPLETA) throw new ReglaNegocioException("La salida ya está COMPLETA.");
 
         long dias = fechaInicio.toEpochDay() - hoy.toEpochDay();
         if (dias < 10) {
             throw new ReglaNegocioException("Ya no se aceptan reservas (fuera de término).");
         }
+
         int disponible = calcularCupoDisponible();
         if (r.getCantidadLugaresOcupados() > disponible) {
-            throw new CupoExcedidoException("Cupo insuficiente.");
+            throw new CupoExcedidoException("Cupo insuficiente. Quedan " + disponible + " lugares.");
         }
+
         reservas.add(r);
         this.listaPasajerosEmitida = false;
+
+        // RN01-06: Si al agregar la reserva el cupo llega a 0, la salida pasa a COMPLETA
+        if (calcularCupoDisponible() == 0) {
+            this.estado = EstadoSalida.COMPLETA;
+        }
     }
 
     public void asignarGuia(Guia guia, List<Salida> otras) throws ReglaNegocioException {
@@ -129,9 +137,31 @@ public class Salida implements Serializable {
 
     public boolean cancelarSiNoAlcanzaCupoMinimo(LocalDate hoy) throws ReglaNegocioException {
         long dias = fechaInicio.toEpochDay() - hoy.toEpochDay();
-        if (dias > 7 || dias <= 0) return false;
-        this.estado = EstadoSalida.CANCELADA;
-        return true;
+
+        // La regla dice que se evalúa a los 7 días antes
+        if (dias == 7) {
+            int ocupadosConfirmados = 0;
+            // Solo cuentan los pasajeros de reservas que estén pagadas/confirmadas
+            for (Reserva r : reservas) {
+                if (r.getEstado() == EstadoReserva.CONFIRMADA || r.getEstado() == EstadoReserva.FINALIZADA) {
+                    ocupadosConfirmados += r.getCantidadLugaresOcupados();
+                }
+            }
+
+            // RN01-06: Si no alcanza el cupo mínimo, se cancela la salida
+            if (ocupadosConfirmados < tour.getCupoMinimo()) {
+                this.estado = EstadoSalida.CANCELADA;
+
+                // Si la salida se cancela, la regla dicta que todas sus reservas vigentes también se cancelan
+                for (Reserva r : reservas) {
+                    if (r.ocupaLugar()) {
+                        r.cancelarPorAgencia("Salida cancelada por no alcanzar cupo mínimo", hoy);
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     // Getters
