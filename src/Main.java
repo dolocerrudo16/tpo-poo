@@ -1,161 +1,117 @@
-import modelo.*;
-import modelo.enums.*;
-import modelo.estructura.Agencia;
-import modelo.estructura.Reloj;
+import excepciones.ReglaNegocioException;
+import modelo.estructura.*;
 import modelo.personasRoles.*;
-import modelo.reservas.LiquidacionGuia;
+import modelo.politicasPromos.CancelacionFlexible;
+import modelo.reservas.CalculadoraTarifa;
 import modelo.reservas.Pago;
 import modelo.reservas.Reserva;
 import modelo.toursEspecificos.TourAventura;
-import modelo.toursEspecificos.TourCultural;
-import modelo.toursEspecificos.TourNaturaleza;
 import modelo.viajesServicios.*;
+import modelo.enums.*;
 import presentacion.controladores.*;
-import reportes.*;
-import persistencia.*;
-import excepciones.ReglaNegocioException;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
+        System.out.println("INICIANDO PRUEBAS DE INTEGRACIÓN - AGENCIA DE TURISMO");
+
         try {
-            System.out.println("=== INICIALIZACION DEL SISTEMA ===");
-
-            // 1. Reloj y fechas
-            Reloj reloj = new Reloj();
-            LocalDate hoy = reloj.hoy();
-            System.out.println("\n--- 1. Reloj y Fechas ---");
-            System.out.println("Fecha actual del sistema: " + hoy);
-
-            // 2. Instanciacion de la raiz del modelo y persistencia
+            // 1. Inicialización de la Agencia y Controladores
             Agencia agencia = new Agencia();
-            GestorPersistencia gestorPersistencia = new GestorPersistencia();
-            System.out.println("\n--- 2. Entorno y Persistencia ---");
-            System.out.println("Agencia y Gestor de Persistencia instanciados correctamente.");
-
-            // 3. Controladores
+            ControladorOperaciones ctrlOperaciones = new ControladorOperaciones(agencia);
+            ControladorReserva ctrlReserva = new ControladorReserva(agencia);
             ControladorAdministracion ctrlAdmin = new ControladorAdministracion(agencia);
-            ControladorOperaciones ctrlOp = new ControladorOperaciones(agencia);
-            ControladorReserva ctrlRes = new ControladorReserva(agencia);
-            System.out.println("\n--- 3. Controladores ---");
-            System.out.println("Controladores (Administración, Operaciones, Reservas) vinculados.");
+            Reloj reloj = new Reloj(); // Simulador de fecha actual
 
-            // 4. Personas: Empleados y Clientes
-            Vendedor vendedor = new Vendedor(1, "Carlos Gomez", "30111222", "11223344", 0.03);
-            Guia guia = new Guia(2, "Maria Lopez", "28333444", "55667788", 15000.0);
-            Administrador admin = new Administrador(3, "Roberto Jefe", "20111999", "11889900");
-            CoordinadorOperaciones coord = new CoordinadorOperaciones(4, "Lucia Opera", "27333222", "11445566");
+            System.out.println("\n[OK] Controladores y Agencia inicializados.");
 
-            Cliente cliente = new Cliente(1, "Ana Ruiz", "25444555", "11998877", "ana.ruiz@email.com", "Argentina");
-            Pasajero p1 = new Pasajero("Pedro Ruiz", "40555666", hoy.minusYears(25), TipoPasajero.ADULTO, "11998877", "Ninguna");
-            Pasajero p2 = new Pasajero("Sofia Ruiz", "48555666", hoy.minusYears(15), TipoPasajero.MENOR, "11998877", "Vegetariana");
+            // 2. Alta de Personal (Uso de Herencia: Vendedor y Guia heredan de Empleado)
+            Vendedor vendedor = new Vendedor(101, "Ana Vendedora", "11223344", "11-5555-1234", 0.03);
+            Guia guia = new Guia(201, "Carlos Guia", "22334455", "11-4444-5678", 15000.0);
+            System.out.println("[OK] Personal registrado: " + vendedor.getNombre() + " y " + guia.getNombre());
 
-            System.out.println("\n--- 4. Empleados, Clientes y Pasajeros ---");
-            System.out.println("Vendedor: " + vendedor);
-            System.out.println("Guía: " + guia);
-            System.out.println("Administrador: " + admin);
-            System.out.println("Coordinador: " + coord);
-            System.out.println("Cliente registrado: " + cliente);
-            System.out.println("Pasajeros listos: " + p1 + " | " + p2);
+            // 3. Alta de Vehículo y Proveedor
+            Vehiculo combi = new Vehiculo("AF123CD", 15, TipoVehiculo.COMBI);
+            Proveedor provHotel = new Proveedor("Hotel Patagonia", "30112233445", "contacto@hotel.com", "Alojamiento");
+            System.out.println("Vehículo y Proveedor registrados.");
 
-            // 5. Proveedor y Actividades
-            Proveedor hotel = new Proveedor("Hotel Cordillera", "20300100203", "Juan Perez", "Alojamiento");
-            Actividad act1 = new Actividad(1, 1, "09:00", "Ascenso Base", "Cerro Catedral", hotel);
-            Actividad act2 = new Actividad(2, 1, "10:30", "Trekking Glaciar", "Tronador", hotel);
+            // 4. Creación de un Tour con Polimorfismo (TourAventura hereda de Tour)
+            TourAventura tourSur = new TourAventura("T-SUR", "Expedición Glaciar", "Trekking en hielo",
+                    5, 2, 15, "Alta", 18);
 
-            System.out.println("\n--- 5. Proveedores y Actividades ---");
-            System.out.println("Proveedor: " + hotel);
-            System.out.println("Actividad 1: Día " + act1.getDia() + " - " + act1.getDescripcion() + " (" + act1.getLugar() + " a las " + act1.getHorario() + ")");
-            System.out.println("Actividad 2: Día " + act2.getDia() + " - " + act2.getDescripcion() + " (" + act2.getLugar() + " a las " + act2.getHorario() + ")");
+            // Agregando Actividad y Tarifa al Tour (Manejo de colecciones internas)
+            Actividad act1 = new Actividad(1, 1, "08:00", "Llegada y check-in", "Calafate", provHotel);
+            tourSur.agregarActividad(act1);
 
-            // 6. Tours, Tarifas y Adicionales
-            TourAventura tourAventura = new TourAventura("ADV-01", "Aventura Bariloche", "Rutas y trekking", 3, 2, 20, "Media", 12);
-            tourAventura.agregarActividad(act1);
-            tourAventura.agregarActividad(act2);
+            TarifaTemporada tarifaAlta = new TarifaTemporada(Temporada.ALTA,
+                    LocalDate.of(2026, 12, 1),
+                    LocalDate.of(2027, 3, 31),
+                    250000.0);
+            tourSur.agregarTarifa(tarifaAlta);
+            System.out.println("Tour creado y configurado: " + tourSur.toString());
 
-            TourCultural tourCultural = new TourCultural("CUL-01", "Casco Historico", "Museos e historia", 1, 1, 30);
-            TourNaturaleza tourNaturaleza = new TourNaturaleza("NAT-01", "Bosque de Arrayanes", "Flora y fauna", 2, 2, 25);
+            // 5. Programación de una Salida
+            LocalDate fechaInicio = LocalDate.of(2026, 12, 15);
+            LocalDate fechaFin = fechaInicio.plusDays(tourSur.getDuracionDias() - 1);
+            Salida salidaDic = new Salida(1, fechaInicio, fechaFin, 10, tourSur, reloj.hoy());
 
-            TarifaTemporada tarifa = new TarifaTemporada(Temporada.ALTA, hoy.minusDays(5), hoy.plusMonths(2), 75000.0);
-            tourAventura.agregarTarifa(tarifa);
+            // Asignación de recursos a la salida
+            salidaDic.asignarGuia(guia, new ArrayList<>());
+            salidaDic.asignarVehiculo(combi, new ArrayList<>());
+            System.out.println("Salida programada y recursos asignados. Estado: " + salidaDic.getEstado());
 
-            ServicioAdicional seguro = new ServicioAdicional(1, "Seguro Medico Aventura", 5000.0, TipoServicio.SEGURO_VIAJE);
-            ServicioAdicional traslado = new ServicioAdicional(2, "Traslado Aeropuerto", 3500.0, TipoServicio.TRASLADO);
+            // 6. Registro de Cliente y Pasajeros
+            Cliente cliente = new Cliente(1, "Juan Perez", "30444555", "11-3333-2222", "juan@mail.com", "Argentina");
 
-            System.out.println("\n--- 6. Tours, Tarifas y Servicios Adicionales ---");
-            System.out.println("Tour Creado: " + tourAventura + " [Dificultad: " + tourAventura.getNivelDificultad() + ", Edad mínima: " + tourAventura.getEdadMinima() + "]");
-            System.out.println("Tour Creado: " + tourCultural);
-            System.out.println("Tour Creado: " + tourNaturaleza);
-            System.out.println("Tarifa configurada: Temporada " + tarifa.getTemporada() + " ($" + tarifa.getValor() + ") vigencia: " + tarifa.getVigenteDesde() + " al " + tarifa.getVigenteHasta());
-            System.out.println("Servicio Adicional: " + seguro.getDescripcion() + " ($" + seguro.getPrecio() + ")");
-            System.out.println("Servicio Adicional: " + traslado.getDescripcion() + " ($" + traslado.getPrecio() + ")");
+            Pasajero p1 = new Pasajero("Juan Perez", "30444555", LocalDate.of(1990, 5, 10),
+                    TipoPasajero.ADULTO, "Maria: 11-2222-3333", "Vegetariano");
+            Pasajero p2 = new Pasajero("Laura Perez", "32111222", LocalDate.of(1995, 8, 20),
+                    TipoPasajero.ADULTO, "Maria: 11-2222-3333", "Ninguna");
+            List<Pasajero> listaPasajeros = new ArrayList<>(List.of(p1, p2));
+            System.out.println("Cliente y " + listaPasajeros.size() + " pasajeros registrados.");
 
-            // 7. Vehiculos y Salidas
-            Vehiculo combi = new Vehiculo("AA123BB", 15, TipoVehiculo.COMBI);
-            Vehiculo micro = new Vehiculo("AC456DD", 45, TipoVehiculo.MICRO);
+            // 7. Gestión de Reserva (Simulación de la capa de Controladores)
+            // Nota: Se instancian las dependencias requeridas por el constructor de Reserva según tu modelo
+            Reserva reserva = new Reserva(1001, cliente, salidaDic, vendedor,
+                    new CancelacionFlexible(), new CalculadoraTarifa(), reloj.hoy());
+            reserva.agregarPasajero(p1);
+            reserva.agregarPasajero(p2);
+            salidaDic.agregarReserva(reserva, reloj.hoy());
+            System.out.println("Reserva creada exitosamente. Número: " + reserva.getNumero());
 
-            LocalDate inicioSalida = hoy.plusDays(15);
-            LocalDate finSalida = inicioSalida.plusDays(tourAventura.getDuracionDias() - 1L);
-            Salida salida = new Salida(101, inicioSalida, finSalida, 15, tourAventura, hoy);
+            // 8. Registro de Pago
+            Pago pagoSena = reserva.registrarPago(150000.0, MedioPago.TRANSFERENCIA, 1, reloj.hoy());
+            System.out.println("[OK] Pago registrado: $" + pagoSena.getMonto() + " mediante " + pagoSena.getMedioPago());
 
-            System.out.println("\n--- 7. Vehículos y Salidas ---");
-            System.out.println("Vehículo 1: " + combi);
-            System.out.println("Vehículo 2: " + micro);
-            System.out.println("Salida #" + salida.getIdSalida() + " programada desde " + inicioSalida + " hasta " + finSalida + " (Estado: " + salida.getEstado() + ")");
+            // 9. Emisión de Lista de Pasajeros y Cambio de Estado (Operaciones)
+            List<Pasajero> emitidos = salidaDic.emitirListaPasajeros();
+            System.out.println("Lista de pasajeros emitida. Cantidad confirmada: " + emitidos.size());
 
-            // 8. Flujo mediante Controladores
-            ctrlAdmin.altaTour(tourAventura);
-            ctrlAdmin.altaTour(tourCultural);
-            ctrlAdmin.altaTour(tourNaturaleza);
-            ctrlAdmin.altaProveedor("Restaurante Los Alerces", "30708090104", "Recepcion", "Gastronomia");
+            salidaDic.iniciar(reloj.hoy());
+            System.out.println("Salida iniciada. Nuevo estado: " + salidaDic.getEstado());
 
-            ctrlOp.asignarVehiculo(salida, combi);
-            ctrlOp.asignarGuia(salida, guia);
-
-            List<Pasajero> listaPasajeros = new ArrayList<>();
-            listaPasajeros.add(p1);
-            listaPasajeros.add(p2);
-
-            Reserva reserva = ctrlRes.crearReserva(cliente, salida, vendedor, listaPasajeros);
-            Pago pago = ctrlRes.registrarPago(reserva, 150000.0, MedioPago.EFECTIVO, 1);
-
-            List<Salida> salidasGuia = new ArrayList<>();
-            salidasGuia.add(salida);
-            LiquidacionGuia liquidacion = ctrlAdmin.liquidar(guia, salidasGuia);
-
-            System.out.println("\n--- 8. Ejecución mediante Controladores ---");
-            System.out.println("Alta de tours y proveedores completada en Administración.");
-            System.out.println("Guía y vehículo asignados a la salida mediante ControladorOperaciones.");
-            System.out.println("Reserva creada mediante ControladorReserva: " + reserva);
-            System.out.println("Pago registrado mediante ControladorReserva: " + pago);
-            System.out.println("Liquidación de guía generada: " + liquidacion);
-
-            // 9. Reportes
-            System.out.println("\n--- 9. Reportes ---");
-            Reportes reportes = ctrlAdmin.getReportes();
-            reportes.ingresosPorTour(hoy.minusDays(30), hoy.plusDays(30), tourAventura);
-            reportes.ocupacionPorSalida(hoy, hoy.plusDays(60), tourAventura);
-            reportes.ventasPorVendedor(hoy.minusDays(30), hoy.plusDays(30), tourAventura, vendedor);
-            reportes.cancelaciones(hoy.minusDays(30), hoy.plusDays(30), tourAventura);
-            System.out.println("Reportes ejecutados exitosamente.");
-
-            // 10. Persistencia
-            System.out.println("\n--- 10. Persistencia ---");
-            gestorPersistencia.guardar(agencia, "agencia_datos.dat");
-            System.out.println("Estado de la agencia guardado en 'agencia_datos.dat'.");
-            Agencia agenciaRecuperada = gestorPersistencia.cargar("agencia_datos.dat");
-            System.out.println("Estado de la agencia recuperado desde archivo: " + agenciaRecuperada);
-
-            System.out.println("\n=== EJECUCION FINALIZADA SIN ERRORES ===");
+            // 10. Prueba de Excepciones (Reglas de Negocio)
+            System.out.println("\nPRUEBA DE REGLAS DE NEGOCIO (EXCEPCIONES)");
+            try {
+                // Forzamos un error: Edad menor a la permitida para Tour de Aventura
+                Pasajero pInvalido = new Pasajero("Niño", "50111222", LocalDate.of(2018, 1, 1),
+                        TipoPasajero.MENOR, "Madre", "");
+                if (!tourSur.validarPasajero(pInvalido, fechaInicio)) {
+                    throw new ReglaNegocioException("El pasajero no cumple la edad mínima para el Tour de Aventura.");
+                }
+            } catch (ReglaNegocioException e) {
+                System.out.println("[EXCEPCIÓN CAPTURADA CORRECTAMENTE]: " + e.getMessage());
+            }
 
         } catch (ReglaNegocioException e) {
-            System.err.println("Regla de negocio no superada: " + e.getMessage());
+            System.err.println("Fallo inesperado en la inicialización: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error general: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Error general del sistema: " + e.getMessage());
         }
+
+        System.out.println("\nFIN DE LAS PRUEBAS ");
     }
 }
