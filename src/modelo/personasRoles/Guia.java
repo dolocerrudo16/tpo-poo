@@ -7,7 +7,7 @@ import modelo.clasesAbstractas.Empleado;
 import modelo.enums.CategoriaTour;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,8 +15,7 @@ public class Guia extends Empleado {
 
     private double honorarioPorDia;
     private List<String> idiomas = new ArrayList<>();
-    private Set<CategoriaTour> categoriasHabilitadas = EnumSet.noneOf(CategoriaTour.class);
-
+    private Set<CategoriaTour> categoriasHabilitadas = new HashSet<>();
     public Guia(int legajo, String nombre, String documento, String telefono, double honorarioPorDia)
             throws ReglaNegocioException {
         super(legajo, nombre, documento, telefono);

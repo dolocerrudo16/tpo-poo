@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Collections;
 
 public abstract class Tour {
     protected String codigo;
@@ -35,12 +36,12 @@ public abstract class Tour {
         this.cupoMaximo = cupoMaximo;
     }
 
-    /** Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP). */
+    //Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP).
     public abstract boolean validarPasajero(Pasajero p, LocalDate fechaSalida);
 
     public abstract CategoriaTour getCategoria();
 
-    /** RN: el seguro de viaje es obligatorio en los tours que lo requieran (aventura). */
+    // RN: el seguro de viaje es obligatorio en los tours que lo requieran (aventura).
     public abstract boolean requiereSeguro();
 
     public void agregarActividad(Actividad a) throws ReglaNegocioException {
@@ -49,10 +50,17 @@ public abstract class Tour {
             throw new ReglaNegocioException("El día " + a.getDia() + " excede la duración del tour (" + duracionDias + " días).");
         }
         itinerario.add(a);
-        itinerario.sort(Comparator.comparingInt(Actividad::getDia).thenComparingInt(Actividad::getOrden));
-    }
+        java.util.Collections.sort(itinerario, new Comparator<Actividad>() {
+            @Override
+            public int compare(Actividad a1, Actividad a2) {
+                if (a1.getDia() != a2.getDia()) {
+                    return Integer.compare(a1.getDia(), a2.getDia());
+                }
+                return Integer.compare(a1.getOrden(), a2.getOrden());
+            }
+        });    }
 
-    /** No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa. */
+    //No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa.
     public void agregarTarifa(TarifaTemporada t) throws ReglaNegocioException {
         if (t == null) throw new ReglaNegocioException("La tarifa es obligatoria.");
         for (TarifaTemporada existente : tarifas) {
@@ -61,16 +69,22 @@ public abstract class Tour {
             }
         }
         tarifas.add(t);
-        tarifas.sort(Comparator.comparing(TarifaTemporada::getVigenteDesde));
-    }
+        java.util.Collections.sort(tarifas, new Comparator<TarifaTemporada>() {
+            @Override
+            public int compare(TarifaTemporada t1, TarifaTemporada t2) {
+                return t1.getVigenteDesde().compareTo(t2.getVigenteDesde());
+            }
+        });    }
 
-    /** CU07 (flujo 1a): si no hay tarifa vigente para la fecha de la salida, no se puede cotizar. */
+    // CU07 (flujo 1a): si no hay tarifa vigente para la fecha de la salida, no se puede cotizar.
     public TarifaTemporada obtenerTarifaVigente(LocalDate fechaSalida) throws ReglaNegocioException {
-        return tarifas.stream()
-                .filter(t -> t.cubre(fechaSalida))
-                .findFirst()
-                .orElseThrow(() -> new ReglaNegocioException(
-                        "El tour " + codigo + " no tiene una tarifa vigente para la fecha " + fechaSalida + "."));
+        for (TarifaTemporada t : tarifas) {
+            if (t.cubre(fechaSalida)) {
+                return t;
+            }
+        }
+        throw new ReglaNegocioException(
+                "El tour " + codigo + " no tiene una tarifa vigente para la fecha " + fechaSalida + ".");
     }
 
     public String getCodigo() { return codigo; }
