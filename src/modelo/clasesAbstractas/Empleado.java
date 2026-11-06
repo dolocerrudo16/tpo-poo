@@ -2,8 +2,10 @@ package modelo.clasesAbstractas;
 
 import excepciones.ReglaNegocioException;
 import modelo.Validaciones;
+import java.io.Serializable;
 
-public abstract class Empleado {
+public abstract class Empleado implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     protected int legajo;
     protected String nombre;

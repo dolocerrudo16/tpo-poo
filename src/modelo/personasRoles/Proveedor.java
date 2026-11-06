@@ -2,9 +2,10 @@ package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
 import modelo.Validaciones;
+import java.io.Serializable;
 
-//Proveedor externo (hotel, restaurante, transportista). El CUIT lo identifica.
-public class Proveedor {
+public class Proveedor implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String nombre;
     private String cuit;

@@ -7,13 +7,15 @@ import modelo.viajesServicios.Actividad;
 import modelo.viajesServicios.TarifaTemporada;
 import excepciones.ReglaNegocioException;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Collections;
 
-public abstract class Tour {
+public abstract class Tour implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     protected String codigo;
     protected String nombre;
     protected String descripcion;

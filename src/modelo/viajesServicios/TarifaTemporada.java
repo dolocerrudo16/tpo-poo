@@ -4,9 +4,11 @@ import excepciones.ReglaNegocioException;
 import modelo.Validaciones;
 import modelo.enums.Temporada;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class TarifaTemporada {
+public class TarifaTemporada implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Temporada temporada;
     private LocalDate vigenteDesde;

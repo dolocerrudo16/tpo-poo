@@ -3,8 +3,10 @@ package modelo.viajesServicios;
 import excepciones.ReglaNegocioException;
 import modelo.Validaciones;
 import modelo.enums.TipoVehiculo;
+import java.io.Serializable;
 
-public class Vehiculo {
+public class Vehiculo implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String patente;
     private int capacidad;

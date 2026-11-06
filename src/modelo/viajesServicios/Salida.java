@@ -9,13 +9,14 @@ import modelo.enums.EstadoSalida;
 import modelo.personasRoles.Guia;
 import modelo.personasRoles.Pasajero;
 
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Salida {
+public class Salida implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private int idSalida;
     private LocalDate fechaInicio;

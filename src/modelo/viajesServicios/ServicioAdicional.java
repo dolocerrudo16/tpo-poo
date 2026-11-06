@@ -3,8 +3,10 @@ package modelo.viajesServicios;
 import excepciones.ReglaNegocioException;
 import modelo.Validaciones;
 import modelo.enums.TipoServicio;
+import java.io.Serializable;
 
-public class ServicioAdicional {
+public class ServicioAdicional implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private int id;
     private String descripcion;

@@ -3,8 +3,10 @@ package modelo.viajesServicios;
 import excepciones.ReglaNegocioException;
 import modelo.Validaciones;
 import modelo.personasRoles.Proveedor;
+import java.io.Serializable;
 
-public class Actividad {
+public class Actividad implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private int dia;
     private int orden;

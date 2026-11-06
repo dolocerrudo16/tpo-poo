@@ -5,13 +5,15 @@ import modelo.viajesServicios.ServicioAdicional;
 import modelo.Validaciones;
 import modelo.enums.TipoPasajero;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Pasajero implements Comparable<Pasajero> {
+public class Pasajero implements Comparable<Pasajero>, Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String nombre;
     private String documento;
