@@ -30,10 +30,27 @@ public class Actividad implements Serializable {
     }
 
     // Getters indispensables
-    public int getDia() { return dia; }
-    public int getOrden() { return orden; }
-    public String getHorario() { return horario; }
-    public String getDescripcion() { return descripcion; }
-    public String getLugar() { return lugar; }
-    public Proveedor getProveedor() { return proveedor; }
+    public int getDia() {
+        return dia;
+    }
+
+    public int getOrden() {
+        return orden;
+    }
+
+    public String getHorario() {
+        return horario;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
 }

@@ -25,9 +25,17 @@ public class Vehiculo implements Serializable {
         this.tipo = tipo;
     }
 
-    public String getPatente() { return patente; }
-    public int getCapacidad() { return capacidad; }
-    public TipoVehiculo getTipo() { return tipo; }
+    public String getPatente() {
+        return patente;
+    }
+
+    public int getCapacidad() {
+        return capacidad;
+    }
+
+    public TipoVehiculo getTipo() {
+        return tipo;
+    }
 
     @Override
     public String toString() {

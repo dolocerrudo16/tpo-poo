@@ -39,8 +39,19 @@ public class TarifaTemporada implements Serializable {
     }
 
     // Getters indispensables
-    public Temporada getTemporada() { return temporada; }
-    public LocalDate getVigenteDesde() { return vigenteDesde; }
-    public LocalDate getVigenteHasta() { return vigenteHasta; }
-    public double getValor() { return valor; }
+    public Temporada getTemporada() {
+        return temporada;
+    }
+
+    public LocalDate getVigenteDesde() {
+        return vigenteDesde;
+    }
+
+    public LocalDate getVigenteHasta() {
+        return vigenteHasta;
+    }
+
+    public double getValor() {
+        return valor;
+    }
 }

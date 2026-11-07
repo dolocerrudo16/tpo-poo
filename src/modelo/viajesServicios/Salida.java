@@ -163,13 +163,39 @@ public class Salida implements Serializable {
         return false;
     }
 
-    public int getIdSalida() { return idSalida; }
-    public EstadoSalida getEstado() { return estado; }
-    public Tour getTour() { return tour; }
-    public Guia getGuiaAsignado() { return guiaAsignado; }
-    public Vehiculo getVehiculo() { return vehiculo; }
-    public List<Reserva> getReservas() { return new ArrayList<>(reservas); }
-    public int getCupoMaximo() { return cupoMaximo; }
-    public LocalDate getFechaInicio() { return fechaInicio; }
-    public LocalDate getFechaFin() { return fechaFin; }
+    public int getIdSalida() {
+        return idSalida;
+    }
+
+    public EstadoSalida getEstado() {
+        return estado;
+    }
+
+    public Tour getTour() {
+        return tour;
+    }
+
+    public Guia getGuiaAsignado() {
+        return guiaAsignado;
+    }
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public List<Reserva> getReservas() {
+        return new ArrayList<>(reservas);
+    }
+
+    public int getCupoMaximo() {
+        return cupoMaximo;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
 }

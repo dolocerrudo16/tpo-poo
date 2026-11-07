@@ -25,8 +25,19 @@ public class ServicioAdicional implements Serializable {
     }
 
     // Getters indispensables
-    public int getId() { return id; }
-    public String getDescripcion() { return descripcion; }
-    public double getPrecio() { return precio; }
-    public TipoServicio getTipo() { return tipo; }
+    public int getId() {
+        return id;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public TipoServicio getTipo() {
+        return tipo;
+    }
 }
