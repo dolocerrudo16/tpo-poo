@@ -16,7 +16,7 @@ Este proyecto es una aplicación desarrollada en Java para gestionar las operaci
    `git clone [URL_DEL_REPOSITORIO]`
 2. Abrir el proyecto en el IDE de preferencia.
 3. Asegurarse de tener configurado el JDK 17 o superior en las propiedades del proyecto.
-4. Localizar la clase principal (`Main.java` u otra que se designe para el inicio) dentro de la carpeta `src`.
+4. Localizar la clase principal (`PruebaSistema.java` u otra que se designe para el inicio) dentro de la carpeta `src`.
 5. Compilar y ejecutar la clase principal para iniciar la interfaz por consola o gráfica.
 
 ## Datos de Prueba

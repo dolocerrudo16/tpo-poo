@@ -1,7 +1,7 @@
 @startuml secuencia-cu06-crear-reserva
 title Diagrama 1 - CU06 Crear reserva (flujo exitoso con fragmento opt)
 actor Vendedor
-participant ":Main (vista)" as Vista
+participant ":PruebaSistema (vista)" as Vista
 participant ":ControladorReserva" as Ctrl
 participant ":Salida" as Salida
 participant ":Reserva" as Reserva

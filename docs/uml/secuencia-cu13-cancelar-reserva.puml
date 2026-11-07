@@ -1,7 +1,7 @@
 @startuml secuencia-cu13-cancelar-reserva
 title Diagrama 2 - CU13 Cancelar reserva (flujo alternativo con fragmento alt)
 actor Vendedor
-participant ":Main (vista)" as Vista
+participant ":PruebaSistema (vista)" as Vista
 participant ":ControladorReserva" as Ctrl
 participant ":Reserva" as Reserva
 participant ":PoliticaCancelacion" as Politica
