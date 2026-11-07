@@ -158,11 +158,18 @@ public class Reserva implements Serializable {
     }
 
     // Getters
-    public int getNumero() { return numero; }
-    public LocalDate getFechaCreacion() { return fechaCreacion; }
-    public EstadoReserva getEstado() { return estado; }
-    public double getTotal() { return total; }
-    public Temporada getTemporada() { return temporada; }
-    public List<Pago> getPagos() { return new ArrayList<>(pagos); }
-    public Salida getSalida() { return salida; }
+    public int getNumero() {
+        return numero; }
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion; }
+    public EstadoReserva getEstado() {
+        return estado; }
+    public double getTotal() {
+        return total; }
+    public Temporada getTemporada() {
+        return temporada; }
+    public List<Pago> getPagos() {
+        return new ArrayList<>(pagos); }
+    public Salida getSalida() {
+        return salida; }
 }

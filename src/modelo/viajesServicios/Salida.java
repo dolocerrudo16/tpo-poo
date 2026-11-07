@@ -181,4 +181,10 @@ public class Salida implements Serializable {
     public int getCupoMaximo() {
         return cupoMaximo;
     }
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
 }
