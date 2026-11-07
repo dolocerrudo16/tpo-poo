@@ -96,44 +96,47 @@ La solucion esta construida bajo el patron arquitectonico Modelo-Vista-Controlad
 
 ## Datos de Prueba Precargados en la Ejecucion
 
-La clase `PruebaSistema` inicializa y valida los siguientes datos concretos en memoria y en el archivo persistente `sistema_agencia.dat`:
+La clase `PruebaSistema` inicializa y valida los siguientes datos concretos en memoria y en el archivo binario persistente `sistema_agencia.dat`:
 
 * **Fecha de simulacion (Reloj):** 01/10/2026.
 * **Personal y Recursos:**
-* Guia: Germana Mendoza (Legajo 1, DNI 22334455, Honorario diario ARS 20.000,00, Habilitacion en categoria Aventura).
+* Guia: Germana Mendoza (Legajo 1, DNI 22334455, Honorario diario ARS 20.000,00, Habilitada en categorias Aventura y Cultural).
 * Vendedor: Dolores Ventas (Legajo 2, DNI 33445566, Comision 5%).
 * Vehiculo: Combi patente AB123CD (Capacidad 15 pasajeros).
 
 
 * **Catalogo de Tours:**
-* Tour Aventura: "Trekking Glaciar" (Codigo T-AV01, Duracion 5 dias, Cupo min 2 / max 8, Dificultad Alta, Edad minima 18 anos).
-* Tarifa Base Temporada Alta: ARS 100.000,00.
+* Tour Aventura: "Trekking Glaciar" (Codigo T-AV01, Duracion 5 dias, Cupo min 2 / max 8, Dificultad Alta, Edad minima 18 anos). Tarifa Base Temporada Alta: ARS 100.000,00.
+* Tour Cultural: "Circuito Historico y Museos" (Codigo T-CUL01, Duracion 3 dias, Cupo min 1 / max 10). Tarifa Base Temporada Media: ARS 40.000,00.
 
 
-* **Salida Programada:**
-* Fecha de salida: 15/12/2026 (75 dias de anticipacion respecto a la fecha del sistema).
-* Estado inicial: PROGRAMADA (8 cupos disponibles).
+* **Salida #1 (Tour Aventura):**
+* Fechas: del 15/12/2026 al 19/12/2026 (75 dias de anticipacion respecto a la fecha del sistema).
+* Recursos asignados: Guia Germana Mendoza y Combi AB123CD.
+* Reserva #1: Titular Carlos Gomez (DNI 111). Pasajeros: Carlos Gomez (Adulto, tarifa base ARS 100.000,00) y Abuelo Gomez (Jubilado, 10% de descuento por RN07 = ARS 90.000,00). Subtotal base: ARS 190.000,00.
+* Promocion y adicionales: 15% OFF por compra anticipada (>60 dias) = descuento de ARS 28.500,00. Mas 2 seguros de viaje obligatorios por tour de aventura (ARS 5.000,00 c/u) = ARS 10.000,00. Total calculado: ARS 171.500,00.
+* Pago registrado: ARS 60.000,00 en 3 cuotas con Tarjeta (7% de recargo por financiacion = ARS 4.200,00). Estado pasa a CONFIRMADA por superar el 30% de sena.
+* Cancelacion (CU13): Solicitud por motivos personales. Politica flexible a 75 dias devuelve el 90% de lo pagado (ARS 54.000,00) y retiene ARS 6.000,00 con emision de Nota de Ajuste y liberacion total del cupo (0/8 ocupados).
 
 
-* **Reserva Demo:**
-* Cliente titular: Carlos (DNI 111, Carlos@mail.com).
-* Pasajeros incluidos: Carlos (Adulto, tarifa 100%) y Abuelo (Jubilado, 10% descuento por RN07).
-* Descuento aplicado: Promocion Anticipada (15% OFF sobre tarifa base por compra con mas de 60 dias de anticipacion).
-* Seguro obligatorio: ARS 5.000,00 por pasajero al ser un tour de aventura (CU06).
-* Total final liquidado: ARS 171.500,00.
+* **Control de Restricciones (LSP y Excepciones):**
+* Captura controlada de `ReglaNegocioException` al intentar inscribir a un menor de 10 anos en el Tour Aventura que exige un minimo de 18 anos.
 
 
-* **Pagos Registrados:**
-* Pago de sena: ARS 60.000,00 en 3 cuotas con Tarjeta (7% de recargo por financiacion). La reserva cambia su estado a CONFIRMADA al superar el 30% del total.
+* **Salida #2 (Tour Cultural - Flujo Operativo Completo):**
+* Fechas: del 20/11/2026 al 22/11/2026.
+* Reserva #2: Titular Marta Fernandez (DNI 555) con 2 pasajeros adultos (Marta y Esteban Fernandez). Total: ARS 80.000,00 abonado 100% en efectivo.
+* Modificacion de Reserva (CU12): Reemplazo de pasajero Esteban Fernandez por Julieta Gomez respetando la anticipacion minima de 3 dias.
+* Operacion de Salida (CU09): Emision de lista de pasajeros ordenada alfabeticamente mediante `Comparable` (Julieta Gomez, luego Marta Fernandez). Transicion de estados de salida: PROGRAMADA -> EN_CURSO -> FINALIZADA.
+* Liquidacion a Guias (CU10): Calculo de honorarios para Germana Mendoza sobre la Salida #2 finalizada (3 dias a ARS 20.000,00 diarios = ARS 60.000,00 liquidados).
 
 
-* **Politica de Cancelacion (CU13):**
-* Cancelacion flexible: al superar los 30 dias de anticipacion (75 dias restantes), se procesa la devolucion del 90% de lo pagado (ARS 54.000,00) y se emite la respectiva Nota de Ajuste con liberacion automatica de cupos.
+* **Reportes Gerenciales (CU11):**
+* Ocupacion por Salida (Salida #1: 0/8 por cancelacion; Salida #2: 2/10).
+* Cancelaciones del periodo (1 reserva cancelada).
+* Ventas por Vendedor (Dolores Ventas: 1 reserva confirmada por ARS 80.000,00 con comision del 5% = ARS 4.000,00).
+* Ingresos por Tour (ARS 80.000,00 totales percibidos).
 
 
-* **Control de Restricciones y Excepciones:**
-* Validacion de edad minima en tours de aventura (captura controlada de `ReglaNegocioException` al intentar asignar un menor de 10 anos a una actividad con restriccion de 18 anos).
-
-
-* **Persistencia de Objetos:**
-* Guardado binario y recuperacion integra del estado de la agencia mediante `GestorPersistencia` en el archivo `sistema_agencia.dat`.
+* **Persistencia Binaria:**
+* Serializacion y deserializacion integral del objeto raiz `Agencia` mediante `GestorPersistencia` en el archivo `sistema_agencia.dat`, recuperando las 2 salidas registradas sin inconsistencias de estado.
