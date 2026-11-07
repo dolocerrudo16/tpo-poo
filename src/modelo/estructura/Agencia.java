@@ -30,7 +30,6 @@ public class Agencia implements Serializable {
     private List<Vehiculo> vehiculos = new ArrayList<>();
     private List<Proveedor> proveedores = new ArrayList<>();
     private List<ServicioAdicional> servicios = new ArrayList<>();
-
     private List<LiquidacionGuia> liquidaciones = new ArrayList<>();
 
     private CalculadoraTarifa calculadora = new CalculadoraTarifa();
@@ -40,7 +39,6 @@ public class Agencia implements Serializable {
     }
 
     public Salida programarSalida(String codigoTour, LocalDate inicio, LocalDate fin, int cupoMaximo, Tour tour, LocalDate hoy) throws ReglaNegocioException {
-        // El ID puede ser el tamaño de la lista + 1
         int idSalida = salidas.size() + 1;
         Salida nuevaSalida = new Salida(idSalida, inicio, fin, cupoMaximo, tour, hoy);
         salidas.add(nuevaSalida);
@@ -54,9 +52,18 @@ public class Agencia implements Serializable {
         return nuevoCliente;
     }
 
-    // Agrega estos Getters fundamentales para que los controladores puedan consultar los datos
     public List<Salida> getSalidas() {
         return salidas;
+    }
+
+    public List<LiquidacionGuia> getLiquidaciones() {
+        return liquidaciones;
+    }
+
+    public void agregarLiquidacion(LiquidacionGuia liquidacion) {
+        if (liquidacion != null) {
+            liquidaciones.add(liquidacion);
+        }
     }
 
     public List<Reserva> getTodasLasReservas() {

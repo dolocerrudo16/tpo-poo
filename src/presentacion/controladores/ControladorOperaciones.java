@@ -3,6 +3,7 @@ package presentacion.controladores;
 import modelo.estructura.Agencia;
 import modelo.personasRoles.Guia;
 import modelo.personasRoles.Pasajero;
+import modelo.reservas.Reserva;
 import modelo.viajesServicios.Salida;
 import modelo.viajesServicios.Vehiculo;
 import modelo.clasesAbstractas.Tour;
@@ -46,6 +47,15 @@ public class ControladorOperaciones {
 
     public List<String> procesarVencimientos(LocalDate hoy) throws ReglaNegocioException {
         List<String> canceladas = new ArrayList<>();
+
+        // Corrección 3: Anulación de reservas morosas a 10 días de la salida
+        for (Reserva r : agencia.getTodasLasReservas()) {
+            if (r.anularSiVencido(hoy)) {
+                canceladas.add("Reserva #" + r.getNumero() + " anulada por falta de pago del saldo a 10 días del viaje.");
+            }
+        }
+
+        // Cancelación de salidas que a 7 días no alcanzaron cupo mínimo
         for (Salida s : agencia.getSalidas()) {
             if (s.cancelarSiNoAlcanzaCupoMinimo(hoy)) {
                 canceladas.add("Salida " + s.getIdSalida() + " cancelada por falta de cupo mínimo (a 7 días del inicio).");
