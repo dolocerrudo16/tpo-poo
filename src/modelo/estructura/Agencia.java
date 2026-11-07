@@ -46,6 +46,19 @@ public class Agencia implements Serializable {
     }
 
     public Cliente registrarCliente(String nombre, String documento, String telefono, String email, String pais) throws ReglaNegocioException {
+        String docLimpio = documento != null ? documento.trim() : "";
+        String emailLimpio = email != null ? email.trim() : "";
+
+        // Validación de unicidad de cliente (RN y CU05)
+        for (Cliente c : clientes) {
+            if (c.getDocumento().equalsIgnoreCase(docLimpio)) {
+                throw new ReglaNegocioException("Ya existe un cliente registrado con el documento: " + docLimpio);
+            }
+            if (c.getEmail().equalsIgnoreCase(emailLimpio)) {
+                throw new ReglaNegocioException("Ya existe un cliente registrado con el correo electrónico: " + emailLimpio);
+            }
+        }
+
         int idCliente = clientes.size() + 1;
         Cliente nuevoCliente = new Cliente(idCliente, nombre, documento, telefono, email, pais);
         clientes.add(nuevoCliente);
@@ -54,6 +67,10 @@ public class Agencia implements Serializable {
 
     public List<Salida> getSalidas() {
         return salidas;
+    }
+
+    public List<Cliente> getClientes() {
+        return new ArrayList<>(clientes);
     }
 
     public List<LiquidacionGuia> getLiquidaciones() {
