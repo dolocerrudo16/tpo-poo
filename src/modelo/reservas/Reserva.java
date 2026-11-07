@@ -52,7 +52,6 @@ public class Reserva implements Serializable {
         if (pasajeros.contains(p) && s != null) p.agregarServicio(s);
     }
 
-    // establece el total de la reserva tras calcularlo
     public void setTotal(double total) {
         this.total = Dinero.redondear(total);
     }
@@ -64,6 +63,7 @@ public class Reserva implements Serializable {
         }
         return sum;
     }
+
     public Pago registrarPago(double monto, MedioPago medio, int cuotas, LocalDate hoy) throws ReglaNegocioException {
         if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA) {
             throw new ReglaNegocioException("No se pueden registrar pagos en una reserva cancelada o anulada.");
@@ -72,7 +72,6 @@ public class Reserva implements Serializable {
         Pago nuevo = new Pago(pagos.size() + 1, monto, hoy, medio, cuotas);
         pagos.add(nuevo);
 
-        // RN07: Si está PENDIENTE y el total pagado alcanza el 30% del total, pasa a CONFIRMADA
         if (this.estado == EstadoReserva.PENDIENTE) {
             double pagado = getTotalPagado();
             double minimoRequerido = Dinero.redondear(this.total * 0.30);
@@ -85,11 +84,20 @@ public class Reserva implements Serializable {
     }
 
     public boolean anularSiVencido(LocalDate hoy) {
-        // Lógica interna
+        if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA || this.estado == EstadoReserva.FINALIZADA) {
+            return false;
+        }
+
+        long diasFaltantes = java.time.temporal.ChronoUnit.DAYS.between(hoy, salida.getFechaInicio());
+
+        if (diasFaltantes <= 10 && getTotalPagado() < total) {
+            this.estado = EstadoReserva.ANULADA;
+            salida.actualizarEstado();
+            return true;
+        }
         return false;
     }
 
-    // Calcula la penalidad según los días de anticipación y crea la nota de ajuste
     public double cancelar(String motivo, LocalDate hoy) {
         if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA) {
             return 0.0;
@@ -100,6 +108,7 @@ public class Reserva implements Serializable {
         double retencion = getTotalPagado() - totalDevolver;
 
         this.estado = EstadoReserva.CANCELADA;
+        salida.actualizarEstado();
 
         NotaDeAjuste nota = new NotaDeAjuste(notasDeAjuste.size() + 1, totalDevolver, retencion, hoy, motivo, "Mismo medio de pago");
         notasDeAjuste.add(nota);
@@ -112,14 +121,14 @@ public class Reserva implements Serializable {
             return 0.0;
         }
         this.estado = EstadoReserva.CANCELADA;
+        salida.actualizarEstado();
 
-        // RN13: Si la cancelación la provoca la agencia, se devuelve siempre el 100% de lo pagado.
         double totalDevolver = getTotalPagado();
 
         NotaDeAjuste nota = new NotaDeAjuste(
                 notasDeAjuste.size() + 1,
                 totalDevolver,
-                0.0, // retención 0
+                0.0,
                 hoy,
                 motivo,
                 "Mismo medio de pago"
@@ -129,7 +138,6 @@ public class Reserva implements Serializable {
         return totalDevolver;
     }
 
-    // Valida que falten más de 3 días y hace el cambiazo del objeto pasajero
     public double reemplazarPasajero(Pasajero viejo, Pasajero nuevo, LocalDate hoy) throws ReglaNegocioException {
         long diasFaltantes = java.time.temporal.ChronoUnit.DAYS.between(hoy, salida.getFechaInicio());
         if (diasFaltantes < 3) {
@@ -139,7 +147,10 @@ public class Reserva implements Serializable {
         int idx = pasajeros.indexOf(viejo);
         if (idx >= 0) {
             pasajeros.set(idx, nuevo);
-            return 0.0;
+            double nuevoTotal = calculadora.calcularTotal(pasajeros, salida.getTour(), salida.getFechaInicio(), hoy);
+            double diferencia = nuevoTotal - this.total;
+            setTotal(nuevoTotal);
+            return diferencia;
         } else {
             throw new ReglaNegocioException("El pasajero a reemplazar no existe en la reserva.");
         }
@@ -157,19 +168,11 @@ public class Reserva implements Serializable {
         return new ArrayList<>(pasajeros);
     }
 
-    // Getters
-    public int getNumero() {
-        return numero; }
-    public LocalDate getFechaCreacion() {
-        return fechaCreacion; }
-    public EstadoReserva getEstado() {
-        return estado; }
-    public double getTotal() {
-        return total; }
-    public Temporada getTemporada() {
-        return temporada; }
-    public List<Pago> getPagos() {
-        return new ArrayList<>(pagos); }
-    public Salida getSalida() {
-        return salida; }
+    public int getNumero() { return numero; }
+    public LocalDate getFechaCreacion() { return fechaCreacion; }
+    public EstadoReserva getEstado() { return estado; }
+    public double getTotal() { return total; }
+    public Temporada getTemporada() { return temporada; }
+    public List<Pago> getPagos() { return new ArrayList<>(pagos); }
+    public Salida getSalida() { return salida; }
 }

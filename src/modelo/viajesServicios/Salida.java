@@ -26,7 +26,6 @@ public class Salida implements Serializable {
     private boolean listaPasajerosEmitida;
     private boolean liquidada;
 
-    // Relaciones del diagrama
     private Tour tour;
     private Guia guiaAsignado;
     private Vehiculo vehiculo;
@@ -61,6 +60,12 @@ public class Salida implements Serializable {
         return cupoMaximo - ocupados;
     }
 
+    public void actualizarEstado() {
+        if (this.estado == EstadoSalida.COMPLETA && calcularCupoDisponible() > 0) {
+            this.estado = EstadoSalida.PROGRAMADA;
+        }
+    }
+
     public void agregarReserva(Reserva r, LocalDate hoy) throws ReglaNegocioException {
         if (r == null) throw new ReglaNegocioException("La reserva es obligatoria.");
         if (r.getSalida() != this) throw new ReglaNegocioException("La reserva pertenece a otra salida.");
@@ -79,7 +84,6 @@ public class Salida implements Serializable {
         reservas.add(r);
         this.listaPasajerosEmitida = false;
 
-        // RN01-06: Si al agregar la reserva el cupo llega a 0, la salida pasa a COMPLETA
         if (calcularCupoDisponible() == 0) {
             this.estado = EstadoSalida.COMPLETA;
         }
@@ -93,7 +97,6 @@ public class Salida implements Serializable {
 
         for (Salida otra : otras) {
             if (otra != this && otra.getGuiaAsignado() != null && otra.getGuiaAsignado().equals(guia)) {
-                // Hay superposición si el inicio de una <= fin de la otra y viceversa
                 if (!this.fechaInicio.isAfter(otra.fechaFin) && !this.fechaFin.isBefore(otra.fechaInicio)) {
                     throw new ReglaNegocioException("El guía ya tiene la salida " + otra.getIdSalida() + " superpuesta en esas fechas.");
                 }
@@ -138,21 +141,17 @@ public class Salida implements Serializable {
     public boolean cancelarSiNoAlcanzaCupoMinimo(LocalDate hoy) throws ReglaNegocioException {
         long dias = fechaInicio.toEpochDay() - hoy.toEpochDay();
 
-        // La regla dice que se evalúa a los 7 días antes
         if (dias == 7) {
             int ocupadosConfirmados = 0;
-            // Solo cuentan los pasajeros de reservas que estén pagadas/confirmadas
             for (Reserva r : reservas) {
                 if (r.getEstado() == EstadoReserva.CONFIRMADA || r.getEstado() == EstadoReserva.FINALIZADA) {
                     ocupadosConfirmados += r.getCantidadLugaresOcupados();
                 }
             }
 
-            // RN01-06: Si no alcanza el cupo mínimo, se cancela la salida
             if (ocupadosConfirmados < tour.getCupoMinimo()) {
                 this.estado = EstadoSalida.CANCELADA;
 
-                // Si la salida se cancela, la regla dicta que todas sus reservas vigentes también se cancelan
                 for (Reserva r : reservas) {
                     if (r.ocupaLugar()) {
                         r.cancelarPorAgencia("Salida cancelada por no alcanzar cupo mínimo", hoy);
@@ -164,27 +163,13 @@ public class Salida implements Serializable {
         return false;
     }
 
-    // Getters
-    public int getIdSalida() {
-        return idSalida; }
-
-    public EstadoSalida getEstado() {
-        return estado; }
-    public Tour getTour() {
-        return tour; }
-    public Guia getGuiaAsignado() {
-        return guiaAsignado; }
-    public Vehiculo getVehiculo() {
-        return vehiculo; }
-    public List<Reserva> getReservas() {
-        return new ArrayList<>(reservas); }
-    public int getCupoMaximo() {
-        return cupoMaximo;
-    }
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-    public LocalDate getFechaFin() {
-        return fechaFin;
-    }
+    public int getIdSalida() { return idSalida; }
+    public EstadoSalida getEstado() { return estado; }
+    public Tour getTour() { return tour; }
+    public Guia getGuiaAsignado() { return guiaAsignado; }
+    public Vehiculo getVehiculo() { return vehiculo; }
+    public List<Reserva> getReservas() { return new ArrayList<>(reservas); }
+    public int getCupoMaximo() { return cupoMaximo; }
+    public LocalDate getFechaInicio() { return fechaInicio; }
+    public LocalDate getFechaFin() { return fechaFin; }
 }

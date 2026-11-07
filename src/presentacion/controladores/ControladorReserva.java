@@ -29,17 +29,16 @@ public class ControladorReserva {
     public Reserva crearReserva(Cliente cliente, Salida salida, Vendedor vendedor, List<Pasajero> pasajeros, LocalDate hoy) throws Exception {
         int nroReserva = agencia.getTodasLasReservas().size() + 1;
 
-        // Asumiendo que CalculadoraTarifa y CancelacionFlexible se instancian o se pasan por inyección
-        Reserva nuevaReserva = new Reserva(nroReserva, cliente, salida, vendedor,
-                new modelo.politicasPromos.CancelacionFlexible(),
-                new modelo.reservas.CalculadoraTarifa(), hoy);
+        // 1. Instanciamos la calculadora ANTES de crear la reserva
+        modelo.reservas.CalculadoraTarifa calc = new modelo.reservas.CalculadoraTarifa();
 
-        // Agregar los pasajeros y verificar si requiere seguro obligatorio
+        Reserva nuevaReserva = new Reserva(nroReserva, cliente, salida, vendedor,
+                new modelo.politicasPromos.CancelacionFlexible(), calc, hoy);
+
         boolean requiereSeguro = salida.getTour().requiereSeguro();
         ServicioAdicional seguroObligatorio = null;
 
         if (requiereSeguro) {
-            // Se crea un seguro genérico obligatorio para inyectarlo
             seguroObligatorio = new ServicioAdicional(99, "Seguro de Viaje Obligatorio", 5000.0, modelo.enums.TipoServicio.SEGURO_VIAJE);
         }
 
@@ -52,6 +51,10 @@ public class ControladorReserva {
 
         // Vincular la reserva a la salida (esto descuenta el cupo automáticamente en Salida)
         salida.agregarReserva(nuevaReserva, hoy);
+
+        // 2. SOLUCIÓN: Calculamos el total real con la calculadora y se lo seteamos a la reserva
+        double total = calc.calcularTotal(nuevaReserva.getPasajeros(), salida.getTour(), salida.getFechaInicio(), hoy);
+        nuevaReserva.setTotal(total);
 
         return nuevaReserva;
     }
