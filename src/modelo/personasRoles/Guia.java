@@ -23,7 +23,7 @@ public class Guia extends Empleado {
         this.honorarioPorDia = honorarioPorDia;
     }
 
-    @Override
+
     public double calcularRemuneracionVariable(double base) {
         return Dinero.redondear(base * 0.05); // 5% de los adicionales
     }

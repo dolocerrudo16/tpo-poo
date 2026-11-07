@@ -9,8 +9,4 @@ public class Administrador extends Empleado {
         super(legajo, nombre, documento, telefono);
     }
 
-    @Override
-    public double calcularRemuneracionVariable(double base) {
-        return 0.0;
-    }
 }

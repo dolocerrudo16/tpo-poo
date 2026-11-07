@@ -17,8 +17,8 @@ public class Vendedor extends Empleado {
         this.porcentajeComision = porcentajeComision;
     }
 
-    @Override
     public double calcularRemuneracionVariable(double base) {
+
         return Dinero.redondear(base * porcentajeComision);
     }
 }

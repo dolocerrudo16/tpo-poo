@@ -22,7 +22,6 @@ public abstract class Empleado implements Serializable {
         this.telefono = telefono == null ? "" : telefono.trim();
     }
 
-    public abstract double calcularRemuneracionVariable(double baseCalculo);
 
     public int getLegajo() { return legajo; }
     public String getNombre() { return nombre; }

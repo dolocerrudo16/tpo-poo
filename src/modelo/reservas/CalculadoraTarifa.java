@@ -32,19 +32,21 @@ public class CalculadoraTarifa implements Serializable {
             int edad = p.calcularEdad(fechaSalida);
             double multiplicador = 1.0;
 
+            // RN07: menores de 3 no pagan (hasta los 2 años, 11 meses y 29 días)
             if (edad < 3) {
                 multiplicador = 0.0;
-            } else switch (p.getTipo()) {
-                case MENOR:
-                    if (edad < 12) multiplicador = 0.60;
-                    break;
-                case JUBILADO:
-                    multiplicador = 0.90;
-                    break;
-                case ADULTO:
-                default:
-                    multiplicador = 1.0;
-                    break;
+            }
+            // RN07: menores de 12 pagan el 60% (desde los 3 hasta los 11 años, 11 meses y 29 días)
+            else if (edad < 12 && p.getTipo() == modelo.enums.TipoPasajero.MENOR) {
+                multiplicador = 0.60;
+            }
+            // RN07: jubilados tienen un 10% de descuento (pagan el 90%)
+            else if (p.getTipo() == modelo.enums.TipoPasajero.JUBILADO) {
+                multiplicador = 0.90;
+            }
+            // RN07: adultos pagan el 100%
+            else {
+                multiplicador = 1.0;
             }
             subtotalPasajeros += tarifaBase * multiplicador;
 
