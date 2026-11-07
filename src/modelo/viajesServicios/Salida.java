@@ -61,7 +61,17 @@ public class Salida implements Serializable {
     }
 
     public void actualizarEstado() {
-        if (this.estado == EstadoSalida.COMPLETA && calcularCupoDisponible() > 0) {
+        if (this.estado == EstadoSalida.EN_CURSO || this.estado == EstadoSalida.FINALIZADA || this.estado == EstadoSalida.CANCELADA) {
+            return;
+        }
+
+        int lugaresOcupados = cupoMaximo - calcularCupoDisponible();
+
+        if (calcularCupoDisponible() == 0) {
+            this.estado = EstadoSalida.COMPLETA;
+        } else if (lugaresOcupados >= tour.getCupoMinimo()) {
+            this.estado = EstadoSalida.CONFIRMADA;
+        } else {
             this.estado = EstadoSalida.PROGRAMADA;
         }
     }
@@ -84,9 +94,7 @@ public class Salida implements Serializable {
         reservas.add(r);
         this.listaPasajerosEmitida = false;
 
-        if (calcularCupoDisponible() == 0) {
-            this.estado = EstadoSalida.COMPLETA;
-        }
+        actualizarEstado();
     }
 
     public void asignarGuia(Guia guia, List<Salida> otras) throws ReglaNegocioException {
@@ -128,13 +136,22 @@ public class Salida implements Serializable {
     }
 
     public void iniciar(LocalDate hoy) throws ReglaNegocioException {
+        if (this.estado != EstadoSalida.CONFIRMADA && this.estado != EstadoSalida.COMPLETA) {
+            throw new ReglaNegocioException("La salida solo puede iniciarse si está CONFIRMADA o COMPLETA (estado actual: " + this.estado + ").");
+        }
+        if (hoy == null || hoy.isBefore(fechaInicio)) {
+            throw new ReglaNegocioException("La salida no puede iniciarse antes de su fecha de inicio (" + fechaInicio + ").");
+        }
         if (guiaAsignado == null || !listaPasajerosEmitida) {
-            throw new ReglaNegocioException("Faltan requisitos para iniciar la salida.");
+            throw new ReglaNegocioException("Faltan requisitos para iniciar la salida (guía asignado y lista de pasajeros emitida).");
         }
         this.estado = EstadoSalida.EN_CURSO;
     }
 
     public void finalizar(LocalDate hoy) throws ReglaNegocioException {
+        if (this.estado != EstadoSalida.EN_CURSO) {
+            throw new ReglaNegocioException("Solo se puede finalizar una salida EN_CURSO.");
+        }
         this.estado = EstadoSalida.FINALIZADA;
     }
 
@@ -163,6 +180,7 @@ public class Salida implements Serializable {
         return false;
     }
 
+    // Getters
     public int getIdSalida() {
         return idSalida;
     }
