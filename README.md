@@ -11,86 +11,71 @@
 
 Sistema integral de gestion desarrollado en Java para la Agencia de Turismo "Rumbo Sur". La aplicacion permite administrar el catalogo de tours (Aventura, Cultural y Naturaleza), programar salidas operativas asignando guias habilitados y vehiculos de la flota, registrar clientes y emitir reservas con calculo dinamico de tarifas segun el perfil de los pasajeros y la anticipacion de la compra. Asimismo, gestiona el cobro en multiples medios de pago con recargos por cuotas, la emision automatica de seguros obligatorios, politicas polimorficas de cancelacion con reintegros, la emision de listas de pasajeros ordenadas, la liquidacion de honorarios a guias y reportes gerenciales de gestion.
 
-La solucion esta construida bajo el patron arquitectonico Modelo-Vista-Controlador (MVC), asegurando bajo acoplamiento y alta cohesion mediante la aplicacion rigurosa de principios SOLID y patrones GRASP.
+La solucion esta construida bajo el patron arquitectonico Modelo-Vista-Controlador (MVC), asegurando bajo acoplamiento y alta cohesion mediante la aplicacion rigurosa de principios SOLID y patrones GRASP. Cuenta tanto con una interfaz grafica interactiva basada en Java Swing con manejo de eventos como con un plan de pruebas integral automatizado por consola.
 
 ---
 
 ## Requisitos del Entorno
 
 * Java Development Kit (JDK): Version 17 o superior.
-
-
 * IDE recomendado: IntelliJ IDEA, Eclipse o NetBeans.
 * Codificacion: UTF-8.
-* Librerias externas: Ninguna (desarrollado con APIs estandar de Java: `java.time`, `java.util`, `java.io`).
-
-
+* Librerias externas: Ninguna (desarrollado con APIs estandar de Java: java.time, java.util, java.io, javax.swing, java.awt).
 
 ---
 
 ## Estructura del Proyecto
 
 * `src/excepciones`: Excepciones propias de reglas de negocio (`ReglaNegocioException`, `CupoExcedidoException`).
-
-
 * `src/modelo/clasesAbstractas`: Clases base del dominio (`Tour`, `Empleado`).
-
-
 * `src/modelo/enums`: Enumeraciones del sistema (`CategoriaTour`, `EstadoReserva`, `EstadoSalida`, `MedioPago`, `Temporada`, `TipoPasajero`, `TipoServicio`, `TipoVehiculo`).
-
-
 * `src/modelo/estructura`: Entidades centrales y control temporal (`Agencia`, `Reloj`).
-
-
 * `src/modelo/interfaces`: Contratos para promociones y cancelaciones (`PoliticaCancelacion`, `Promocion`).
-
-
 * `src/modelo/personasRoles`: Actores del dominio (`Cliente`, `Pasajero`, `Guia`, `Vendedor`, `Administrador`, `CoordinadorOperaciones`, `Proveedor`).
-
-
-* `src/modelo/politicasPromos`: Implementaciones polimorficas de cancelacion y promociones vigentes.
-
-
+* `src/modelo/politicasPromos`: Implementaciones polimorficas de cancelacion y promociones vigentes (`CancelacionFlexible`, `CancelacionEstricta`, `CancelacionPorAgencia`, `PromocionAnticipada`, `PromocionGrupo`).
 * `src/modelo/reservas`: Logica de calculo, pagos, notas de ajuste y reservas (`Reserva`, `CalculadoraTarifa`, `Pago`, `NotaDeAjuste`, `LiquidacionGuia`, `Dinero`).
-
-
 * `src/modelo/toursEspecificos`: Subclases concretas (`TourAventura`, `TourCultural`, `TourNaturaleza`).
-
-
 * `src/modelo/viajesServicios`: Logica operativa (`Salida`, `Actividad`, `TarifaTemporada`, `Vehiculo`, `ServicioAdicional`).
-
-
 * `src/modelo`: Clase utilitaria de validaciones defensivas (`Validaciones`).
-
-
 * `src/persistencia`: Gestor de serializacion en archivos binarios (`GestorPersistencia`).
-
-
 * `src/presentacion/controladores`: Controladores del patron MVC (`ControladorReserva`, `ControladorOperaciones`, `ControladorAdministracion`).
-
-
+* `src/presentacion/vistas`: Ventanas y formularios de la interfaz grafica Swing (`VistaPrincipal`, `VistaProgramarSalida`, `VistaRegistrarCliente`).
 * `src/reportes`: Modulo de generacion y calculo de metricas operativas (`Reportes`).
-
-
-* `src/PruebaSistema.java`: Clase ejecutable principal que simula y valida el ciclo completo de casos de uso y reglas de negocio.
-
-
+* `src/MainGUI.java`: Punto de entrada interactivo con Interfaz Grafica de Usuario (GUI) y persistencia automatica.
+* `src/PruebaSistema.java`: Clase ejecutable principal que simula y valida de forma automatizada el ciclo completo de casos de uso (CU01 al CU13) y reglas de negocio.
 
 ---
 
 ## Instrucciones de Instalacion y Ejecucion
 
-1. Clonar el repositorio localmente mediante consola:
-`git clone [https://github.com/dolocerrudo16/tpo-poo.git](https://github.com/dolocerrudo16/tpo-poo.git)`
-2. Abrir el proyecto en IntelliJ IDEA (u otro IDE compatible con Java).
-3. Asegurarse de que el directorio `src` este configurado como "Sources Root" (clic derecho en `src` -> Mark Directory as -> Sources Root).
-4. Configurar el Project SDK en Java 17 o superior dentro de File -> Project Structure -> Project.
-5. Ejecutar la clase principal haciendo clic derecho en `src/PruebaSistema.java` y seleccionando "Run 'PruebaSistema.main()'".
+**Pasos iniciales de configuracion:**
+
+* **Paso 1:** Clonar el repositorio localmente mediante consola con el comando: `git clone [https://github.com/dolocerrudo16/tpo-poo.git](https://github.com/dolocerrudo16/tpo-poo.git)`
+* **Paso 2:** Abrir el proyecto en IntelliJ IDEA (u otro IDE compatible con Java).
+* **Paso 3:** Asegurarse de que el directorio `src` este configurado como "Sources Root" (clic derecho en `src` -> Mark Directory as -> Sources Root).
+* **Paso 4:** Configurar el Project SDK en Java 17 o superior dentro de File -> Project Structure -> Project.
+
+**Modalidades de ejecucion:**
+
+### Modalidad 1: Interfaz Grafica (`MainGUI.java`)
+
+Permite operar el sistema de manera interactiva a traves de ventanas, cuadros de dialogo y manejo de eventos (Swing):
+
+* Hacer clic derecho sobre `src/MainGUI.java` y seleccionar **Run 'MainGUI.main()'**.
+* Operaciones disponibles en la interfaz:
+* *Registrar Cliente:* Formulario emergente (`JDialog`) con validacion de unicidad de DNI y formato de correo electronico.
+* *Programar Salida:* Formulario para ingreso de fechas, cupo y asociacion de tour y recursos con control de precondiciones.
+* *Ver Reportes:* Emite en consola las metricas gerenciales en tiempo real a partir del estado de la aplicacion.
+* *Persistencia automatica:* Al iniciar, recupera los datos desde `sistema_agencia.dat` y, al cerrar la ventana, guarda el estado actualizado mediante un hook de finalizacion (`ShutdownHook`).
 
 
-6. La ejecucion mostrara por consola la simulacion integral, paso a paso, de los casos de uso, las reglas de negocio, los reportes gerenciales y la persistencia de datos.
 
+### Modalidad 2: Plan de Pruebas Automatizado (`PruebaSistema.java`)
 
+Ejecuta la simulacion integral paso a paso de los 13 Casos de Uso, validando calculos matematicos, reglas de negocio, manejo de excepciones y persistencia:
+
+* Hacer clic derecho sobre `src/PruebaSistema.java` y seleccionar **Run 'PruebaSistema.main()'**.
+* La consola imprimira los resultados verificando cada bloque funcional sin requerir entrada manual.
 
 ---
 
@@ -126,14 +111,14 @@ La clase `PruebaSistema` inicializa y valida los siguientes datos concretos en m
 * **Salida #2 (Tour Cultural - Flujo Operativo Completo):**
 * Fechas: del 20/11/2026 al 22/11/2026.
 * Reserva #2: Titular Marta Fernandez (DNI 555) con 2 pasajeros adultos (Marta y Esteban Fernandez). Total: ARS 80.000,00 abonado 100% en efectivo.
-* Modificacion de Reserva (CU12): Reemplazo de pasajero Esteban Fernandez por Julieta Gomez respetando la anticipacion minima de 3 dias.
-* Operacion de Salida (CU09): Emision de lista de pasajeros ordenada alfabeticamente mediante `Comparable` (Julieta Gomez, luego Marta Fernandez). Transicion de estados de salida: PROGRAMADA -> EN_CURSO -> FINALIZADA.
-* Liquidacion a Guias (CU10): Calculo de honorarios para Germana Mendoza sobre la Salida #2 finalizada (3 dias a ARS 20.000,00 diarios = ARS 60.000,00 liquidados).
+* Modificacion de Reserva (CU12): Reemplazo de pasajero Esteban Fernandez por Julieta Gomez respetando la anticipacion minima de 3 dias y traspasando servicios.
+* Operacion de Salida (CU09): Emision de lista de pasajeros ordenada alfabeticamente mediante `Comparable` (Julieta Gomez, luego Marta Fernandez). Transicion de estados de salida: PROGRAMADA -> CONFIRMADA -> EN_CURSO -> FINALIZADA.
+* Liquidacion a Guias (CU10): Calculo de honorarios para Germana Mendoza sobre la Salida #2 finalizada (3 dias a ARS 20.000,00 diarios = ARS 60.000,00 liquidados y persistidos en la agencia).
 
 
 * **Reportes Gerenciales (CU11):**
 * Ocupacion por Salida (Salida #1: 0/8 por cancelacion; Salida #2: 2/10).
-* Cancelaciones del periodo (1 reserva cancelada).
+* Cancelaciones del periodo (1 reserva cancelada evaluada por fecha de su Nota de Ajuste).
 * Ventas por Vendedor (Dolores Ventas: 1 reserva confirmada por ARS 80.000,00 con comision del 5% = ARS 4.000,00).
 * Ingresos por Tour (ARS 80.000,00 totales percibidos).
 
