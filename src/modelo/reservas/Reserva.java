@@ -158,12 +158,10 @@ public class Reserva implements Serializable {
             throw new ReglaNegocioException("El pasajero a reemplazar no existe en la reserva.");
         }
 
-        // Corrección 1 & 2: Validar requisitos del tour (LSP) para el nuevo pasajero
         if (!salida.getTour().validarPasajero(nuevo, salida.getFechaInicio())) {
             throw new ReglaNegocioException("El nuevo pasajero no cumple los requisitos de admisión del tour " + salida.getTour().getNombre() + ".");
         }
 
-        // Corrección 2: Traspasar los servicios contratados (incluyendo seguro de viaje obligatorio)
         for (ServicioAdicional s : viejo.getServicios()) {
             nuevo.agregarServicio(s);
         }
@@ -193,4 +191,7 @@ public class Reserva implements Serializable {
     public Temporada getTemporada() { return temporada; }
     public List<Pago> getPagos() { return new ArrayList<>(pagos); }
     public Salida getSalida() { return salida; }
+    public List<NotaDeAjuste> getNotasDeAjuste() {
+        return new ArrayList<>(notasDeAjuste);
+    }
 }
