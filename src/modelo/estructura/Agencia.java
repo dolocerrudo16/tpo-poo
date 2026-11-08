@@ -66,7 +66,7 @@ public class Agencia implements Serializable {
     }
 
     public List<Salida> getSalidas() {
-        return salidas;
+        return new ArrayList<>(salidas);
     }
 
     public List<Cliente> getClientes() {
@@ -74,7 +74,7 @@ public class Agencia implements Serializable {
     }
 
     public List<LiquidacionGuia> getLiquidaciones() {
-        return liquidaciones;
+        return new ArrayList<>(liquidaciones);
     }
 
     public void agregarLiquidacion(LiquidacionGuia liquidacion) {
