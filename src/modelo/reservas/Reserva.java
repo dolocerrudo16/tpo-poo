@@ -48,8 +48,16 @@ public class Reserva implements Serializable {
         if (p != null) pasajeros.add(p);
     }
 
-    public void contratarServicio(Pasajero p, ServicioAdicional s) {
-        if (pasajeros.contains(p) && s != null) p.agregarServicio(s);
+    public void contratarServicio(Pasajero p, ServicioAdicional s) throws ReglaNegocioException {
+        if (pasajeros.contains(p) && s != null) {
+            p.agregarServicio(s);
+            recalcularTotal();
+        }
+    }
+
+    // Experto en Información (GRASP): Reserva calcula su propio total con su calculadora
+    public void recalcularTotal() throws ReglaNegocioException {
+        this.total = calculadora.calcularTotal(pasajeros, salida.getTour(), salida.getFechaInicio(), fechaCreacion);
     }
 
     public void setTotal(double total) {
@@ -90,6 +98,7 @@ public class Reserva implements Serializable {
 
         long diasFaltantes = java.time.temporal.ChronoUnit.DAYS.between(hoy, salida.getFechaInicio());
 
+        // RN07/RN11: Si faltan 10 días o menos y no pagó el total, se anula
         if (diasFaltantes <= 10 && getTotalPagado() < total) {
             this.estado = EstadoReserva.ANULADA;
             salida.actualizarEstado();
@@ -145,15 +154,22 @@ public class Reserva implements Serializable {
         }
 
         int idx = pasajeros.indexOf(viejo);
-        if (idx >= 0) {
-            pasajeros.set(idx, nuevo);
-            double nuevoTotal = calculadora.calcularTotal(pasajeros, salida.getTour(), salida.getFechaInicio(), hoy);
-            double diferencia = nuevoTotal - this.total;
-            setTotal(nuevoTotal);
-            return diferencia;
-        } else {
+        if (idx < 0) {
             throw new ReglaNegocioException("El pasajero a reemplazar no existe en la reserva.");
         }
+
+        if (!salida.getTour().validarPasajero(nuevo, salida.getFechaInicio())) {
+            throw new ReglaNegocioException("El nuevo pasajero no cumple los requisitos de admisión del tour " + salida.getTour().getNombre() + ".");
+        }
+
+        for (ServicioAdicional s : viejo.getServicios()) {
+            nuevo.agregarServicio(s);
+        }
+
+        pasajeros.set(idx, nuevo);
+        double totalAnterior = this.total;
+        recalcularTotal();
+        return Dinero.redondear(this.total - totalAnterior);
     }
 
     public boolean ocupaLugar() {
@@ -175,4 +191,7 @@ public class Reserva implements Serializable {
     public Temporada getTemporada() { return temporada; }
     public List<Pago> getPagos() { return new ArrayList<>(pagos); }
     public Salida getSalida() { return salida; }
+    public List<NotaDeAjuste> getNotasDeAjuste() {
+        return new ArrayList<>(notasDeAjuste);
+    }
 }

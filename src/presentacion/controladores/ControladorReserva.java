@@ -26,14 +26,13 @@ public class ControladorReserva {
         return agencia.registrarCliente(nombre, documento, telefono, email, pais);
     }
 
-    public Reserva crearReserva(Cliente cliente, Salida salida, Vendedor vendedor, List<Pasajero> pasajeros, LocalDate hoy) throws Exception {
+    // Corrección 6: Declara ReglaNegocioException en lugar de Exception genérico
+    public Reserva crearReserva(Cliente cliente, Salida salida, Vendedor vendedor, List<Pasajero> pasajeros, LocalDate hoy) throws ReglaNegocioException {
         int nroReserva = agencia.getTodasLasReservas().size() + 1;
 
-        // 1. Instanciamos la calculadora ANTES de crear la reserva
-        modelo.reservas.CalculadoraTarifa calc = new modelo.reservas.CalculadoraTarifa();
-
         Reserva nuevaReserva = new Reserva(nroReserva, cliente, salida, vendedor,
-                new modelo.politicasPromos.CancelacionFlexible(), calc, hoy);
+                new modelo.politicasPromos.CancelacionFlexible(),
+                new modelo.reservas.CalculadoraTarifa(), hoy);
 
         boolean requiereSeguro = salida.getTour().requiereSeguro();
         ServicioAdicional seguroObligatorio = null;
@@ -43,18 +42,20 @@ public class ControladorReserva {
         }
 
         for (Pasajero p : pasajeros) {
+            // Corrección 1: Validación polimórfica de admisión al tour (LSP y RN01-06)
+            if (!salida.getTour().validarPasajero(p, salida.getFechaInicio())) {
+                throw new ReglaNegocioException("El pasajero " + p.getNombre() + " no cumple con los requisitos del tour " + salida.getTour().getNombre() + ".");
+            }
             if (requiereSeguro) {
                 p.agregarServicio(seguroObligatorio);
             }
             nuevaReserva.agregarPasajero(p);
         }
 
-        // Vincular la reserva a la salida (esto descuenta el cupo automáticamente en Salida)
         salida.agregarReserva(nuevaReserva, hoy);
 
-        // 2. SOLUCIÓN: Calculamos el total real con la calculadora y se lo seteamos a la reserva
-        double total = calc.calcularTotal(nuevaReserva.getPasajeros(), salida.getTour(), salida.getFechaInicio(), hoy);
-        nuevaReserva.setTotal(total);
+        // Experto en Información (GRASP) - Reserva calcula su total internamente
+        nuevaReserva.recalcularTotal();
 
         return nuevaReserva;
     }

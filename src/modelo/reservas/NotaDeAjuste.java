@@ -21,4 +21,11 @@ public class NotaDeAjuste implements Serializable {
         this.motivo = motivo;
         this.mediosDevolucion = mediosDevolucion;
     }
+
+    public int getId() { return id; }
+    public double getMontoDevuelto() { return montoDevuelto; }
+    public double getMontoRetenido() { return montoRetenido; }
+    public LocalDate getFecha() { return fecha; } 
+    public String getMotivo() { return motivo; }
+    public String getMediosDevolucion() { return mediosDevolucion; }
 }

@@ -47,8 +47,9 @@ public class ControladorAdministracion {
         }
 
         double aPagar = guia.calcularHonorario(diasTotales, totalAdicionales);
-        // Retornamos la liquidación generada
-        return new LiquidacionGuia(1, LocalDate.now(), aPagar);
+        LiquidacionGuia liq = new LiquidacionGuia(agencia.getLiquidaciones().size() + 1, LocalDate.now(), aPagar);
+        agencia.agregarLiquidacion(liq);
+        return liq;
     }
 
     public Reportes getReportes() {
