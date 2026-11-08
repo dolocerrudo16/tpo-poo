@@ -1,3 +1,4 @@
+//Permite el ingreso de cualquier pasajero sin restricciones de edad ni seguro obligatorio.
 package modelo.toursEspecificos;
 
 import excepciones.ReglaNegocioException;

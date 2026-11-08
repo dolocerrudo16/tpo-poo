@@ -1,3 +1,4 @@
+//Guarda el cobro de una seña o saldo (fecha, monto, medio de pago) y calcula el 7% de recargo si se abona en cuotas con tarjeta.
 package modelo.reservas;
 
 import excepciones.ReglaNegocioException;

@@ -1,11 +1,12 @@
+//SOLID (LSK), GRASP (alta cohesion) representa datos de identidad
 package modelo.clasesAbstractas;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import java.io.Serializable;
 
 public abstract class Empleado implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; //permite que el personal asignado a salidas o reservas se guarde en disco.
 
     protected int legajo;
     protected String nombre;

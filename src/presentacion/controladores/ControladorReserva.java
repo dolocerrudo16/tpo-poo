@@ -1,3 +1,4 @@
+//Atiende los pedidos de la pantalla relacionados a clientes y ventas: dar de alta un cliente, armar una reserva, cobrar un pago, cambiar a un pasajero o cancelar una reserva.
 package presentacion.controladores;
 
 import modelo.enums.MedioPago;
@@ -26,7 +27,6 @@ public class ControladorReserva {
         return agencia.registrarCliente(nombre, documento, telefono, email, pais);
     }
 
-    // Corrección 6: Declara ReglaNegocioException en lugar de Exception genérico
     public Reserva crearReserva(Cliente cliente, Salida salida, Vendedor vendedor, List<Pasajero> pasajeros, LocalDate hoy) throws ReglaNegocioException {
         int nroReserva = agencia.getTodasLasReservas().size() + 1;
 
@@ -42,7 +42,6 @@ public class ControladorReserva {
         }
 
         for (Pasajero p : pasajeros) {
-            // Corrección 1: Validación polimórfica de admisión al tour (LSP y RN01-06)
             if (!salida.getTour().validarPasajero(p, salida.getFechaInicio())) {
                 throw new ReglaNegocioException("El pasajero " + p.getNombre() + " no cumple con los requisitos del tour " + salida.getTour().getNombre() + ".");
             }
@@ -70,5 +69,17 @@ public class ControladorReserva {
 
     public double cancelarReserva(Reserva reserva, String motivo, LocalDate hoy) {
         return reserva.cancelar(motivo, hoy);
+    }
+
+    public List<Cliente> getClientes() {
+        return agencia.getClientes();
+    }
+
+    public List<Salida> getSalidas() {
+        return agencia.getSalidas();
+    }
+
+    public List<Reserva> getReservas() {
+        return agencia.getTodasLasReservas();
     }
 }

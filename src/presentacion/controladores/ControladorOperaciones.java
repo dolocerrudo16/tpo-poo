@@ -1,3 +1,5 @@
+//Atiende los pedidos operativos
+//GRASP (Indireccion)
 package presentacion.controladores;
 
 import modelo.estructura.Agencia;
@@ -48,7 +50,7 @@ public class ControladorOperaciones {
     public List<String> procesarVencimientos(LocalDate hoy) throws ReglaNegocioException {
         List<String> canceladas = new ArrayList<>();
 
-        // Corrección 3: Anulación de reservas morosas a 10 días de la salida
+        // Anulación de reservas a 10 días de la salida
         for (Reserva r : agencia.getTodasLasReservas()) {
             if (r.anularSiVencido(hoy)) {
                 canceladas.add("Reserva #" + r.getNumero() + " anulada por falta de pago del saldo a 10 días del viaje.");

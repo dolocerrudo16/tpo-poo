@@ -1,7 +1,8 @@
+//Representa opcionales que se le pueden sumar a un pasajero (asistencia al viajero, traslados o excursiones extra).
 package modelo.viajesServicios;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.enums.TipoServicio;
 import java.io.Serializable;
 

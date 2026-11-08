@@ -1,3 +1,4 @@
+//si una reserva se contrata bajo condiciones promocionales
 package modelo.politicasPromos;
 
 import modelo.interfaces.PoliticaCancelacion;

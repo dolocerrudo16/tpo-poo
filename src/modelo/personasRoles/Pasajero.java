@@ -1,8 +1,10 @@
+//Representa a la persona física que viaja. CU09
+//GRASP (Experto en informacion)
 package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
 import modelo.viajesServicios.ServicioAdicional;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.enums.TipoPasajero;
 
 import java.io.Serializable;
@@ -43,7 +45,7 @@ public class Pasajero implements Comparable<Pasajero>, Serializable {
         this.contactoEmergencia = Validaciones.texto(contactoEmergencia, "contacto de emergencia");
         this.restricciones = (restricciones == null || restricciones.isBlank()) ? "Ninguna" : restricciones.trim();
     }
-
+//CU07 calcular tarifa
     public int calcularEdad(LocalDate fecha) {
         return Period.between(fechaNacimiento, fecha).getYears();
     }

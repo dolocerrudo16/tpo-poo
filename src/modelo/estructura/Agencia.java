@@ -1,3 +1,5 @@
+//Es la clase contenedora de todo el negocio; almacena las listas de clientes, salidas y liquidaciones, evita registrar clientes duplicados y devuelve copias protegidas de sus listas para que nadie las modifique indebidamente desde afuera
+//SOLID (SRP)
 package modelo.estructura;
 
 import excepciones.ReglaNegocioException;
@@ -37,7 +39,7 @@ public class Agencia implements Serializable {
 
     public Agencia() {
     }
-
+//GRASP (Creador)
     public Salida programarSalida(String codigoTour, LocalDate inicio, LocalDate fin, int cupoMaximo, Tour tour, LocalDate hoy) throws ReglaNegocioException {
         int idSalida = salidas.size() + 1;
         Salida nuevaSalida = new Salida(idSalida, inicio, fin, cupoMaximo, tour, hoy);
@@ -48,8 +50,7 @@ public class Agencia implements Serializable {
     public Cliente registrarCliente(String nombre, String documento, String telefono, String email, String pais) throws ReglaNegocioException {
         String docLimpio = documento != null ? documento.trim() : "";
         String emailLimpio = email != null ? email.trim() : "";
-
-        // Validación de unicidad de cliente (RN y CU05)
+//GRASP (Experto en información)
         for (Cliente c : clientes) {
             if (c.getDocumento().equalsIgnoreCase(docLimpio)) {
                 throw new ReglaNegocioException("Ya existe un cliente registrado con el documento: " + docLimpio);

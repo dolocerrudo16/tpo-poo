@@ -1,3 +1,4 @@
+//Representa al rol interno encargado de armar las salidas y asignar vehículos y guías.
 package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;

@@ -1,7 +1,8 @@
+//Cada una de las paradas o excursiones que integran el itinerario de un tour (día, horario, descripción y qué proveedor la brinda).
 package modelo.viajesServicios;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.personasRoles.Proveedor;
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ public class Actividad implements Serializable {
     private String descripcion;
     private String lugar;
 
-    // Relación 0..1 con Proveedor (el diagrama marca que Actividad "contrata" Proveedor)
+    // Relación 0..1 con Proveedor (opcional)
     private Proveedor proveedor;
 
     public Actividad(int dia, int orden, String horario, String descripcion, String lugar, Proveedor proveedor)

@@ -1,3 +1,4 @@
+//Redondea los importes a dos decimales y les agrega el signo pesos para mostrarlos prolijos.
 package modelo.reservas;
 
 public final class Dinero {

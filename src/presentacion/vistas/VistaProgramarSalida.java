@@ -1,3 +1,4 @@
+//Ventana emergente para elegir fecha, cupo y crear una nueva salida operativa.
 package presentacion.vistas;
 
 import excepciones.ReglaNegocioException;

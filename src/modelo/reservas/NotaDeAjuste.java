@@ -1,3 +1,4 @@
+//Es el comprobante emitido cuando se cancela una reserva; registra cuánta plata se le devolvió al cliente y cuánto retuvo la agencia como penalidad.
 package modelo.reservas;
 
 import java.io.Serializable;

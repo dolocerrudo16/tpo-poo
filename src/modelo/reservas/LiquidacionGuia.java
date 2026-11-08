@@ -1,3 +1,4 @@
+//Registra el recibo del sueldo liquidado a un guía por una salida ya finalizada.
 package modelo.reservas;
 
 import java.io.Serializable;

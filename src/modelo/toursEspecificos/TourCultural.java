@@ -1,3 +1,5 @@
+//SOLID (PSK) cualquier metodo que reciba un Tour puede interactuar con cualquiera de estos
+// SOLID (OCP)
 package modelo.toursEspecificos;
 
 import excepciones.ReglaNegocioException;

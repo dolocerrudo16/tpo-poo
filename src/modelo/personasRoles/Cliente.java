@@ -1,7 +1,9 @@
+//SOLID (SRP) datos cliente comprador
+//GRASP (Alta cohesion)
 package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import java.io.Serializable;
 
 public class Cliente implements Serializable {

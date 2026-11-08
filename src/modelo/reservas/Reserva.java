@@ -1,3 +1,4 @@
+//Coordina la compra completa: vincula al cliente, los pasajeros, la salida elegida y el vendedor; registra los pagos recibidos, anula por falta de pago y tramita cancelaciones.
 package modelo.reservas;
 
 import excepciones.ReglaNegocioException;
@@ -55,7 +56,8 @@ public class Reserva implements Serializable {
         }
     }
 
-    // Experto en Información (GRASP): Reserva calcula su propio total con su calculadora
+    // Experto en Información (GRASP): posee lista pasajeros y servicios contratados entonces calcula su propio total con su calculadora
+    //SOLID (SRP) no hace la cuenta dentro de reserva
     public void recalcularTotal() throws ReglaNegocioException {
         this.total = calculadora.calcularTotal(pasajeros, salida.getTour(), salida.getFechaInicio(), fechaCreacion);
     }
@@ -76,7 +78,7 @@ public class Reserva implements Serializable {
         if (this.estado == EstadoReserva.CANCELADA || this.estado == EstadoReserva.ANULADA) {
             throw new ReglaNegocioException("No se pueden registrar pagos en una reserva cancelada o anulada.");
         }
-
+//Creador (GRASP)
         Pago nuevo = new Pago(pagos.size() + 1, monto, hoy, medio, cuotas);
         pagos.add(nuevo);
 
@@ -118,7 +120,7 @@ public class Reserva implements Serializable {
 
         this.estado = EstadoReserva.CANCELADA;
         salida.actualizarEstado();
-
+//GRASP (Creador)
         NotaDeAjuste nota = new NotaDeAjuste(notasDeAjuste.size() + 1, totalDevolver, retencion, hoy, motivo, "Mismo medio de pago");
         notasDeAjuste.add(nota);
 
@@ -191,6 +193,7 @@ public class Reserva implements Serializable {
     public Temporada getTemporada() { return temporada; }
     public List<Pago> getPagos() { return new ArrayList<>(pagos); }
     public Salida getSalida() { return salida; }
+    public Cliente getCliente() { return cliente; }
     public List<NotaDeAjuste> getNotasDeAjuste() {
         return new ArrayList<>(notasDeAjuste);
     }

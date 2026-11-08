@@ -1,3 +1,5 @@
+//Cancelacion predeterminada
+//GRASP (Polimorfismo)
 package modelo.politicasPromos;
 
 import modelo.interfaces.PoliticaCancelacion;

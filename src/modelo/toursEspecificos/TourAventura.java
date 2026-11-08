@@ -1,7 +1,8 @@
+//Define que los pasajeros deben tener una edad mínima obligatoria (18 años) y exige contratar seguro médico.
 package modelo.toursEspecificos;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.clasesAbstractas.Tour;
 import modelo.enums.CategoriaTour;
 import modelo.personasRoles.Pasajero;

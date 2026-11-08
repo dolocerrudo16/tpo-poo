@@ -1,3 +1,4 @@
+//Simula la fecha de hoy (hoy()) para poder probar vencimientos y viajes en distintas fechas sin depender del calendario real de la computadora.
 package modelo.estructura;
 
 import java.io.Serializable;

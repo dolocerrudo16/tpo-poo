@@ -1,7 +1,8 @@
+//Registra la combi o micro (patente, capacidad de asientos y tipo) para controlar que no suban más personas de las permitidas.
 package modelo.viajesServicios;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.enums.TipoVehiculo;
 import java.io.Serializable;
 

@@ -1,7 +1,8 @@
+//Define el precio base de un tour para un rango de fechas específico (alta, media o baja).
 package modelo.viajesServicios;
 
 import excepciones.ReglaNegocioException;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.enums.Temporada;
 
 import java.io.Serializable;
@@ -28,8 +29,7 @@ public class TarifaTemporada implements Serializable {
         this.vigenteHasta = vigenteHasta;
         this.valor = valor;
     }
-
-    // Métodos internos (package-private) para que Tour los use sin figurar en el UML público
+//GRASP (Experto en informacion)
     public boolean cubre(LocalDate fecha) {
         return !fecha.isBefore(vigenteDesde) && !fecha.isAfter(vigenteHasta);
     }

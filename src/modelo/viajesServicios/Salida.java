@@ -1,3 +1,4 @@
+//Alta cohesion (centraliza logistica operativa del viaje)
 package modelo.viajesServicios;
 
 import excepciones.CupoExcedidoException;
@@ -51,7 +52,7 @@ public class Salida implements Serializable {
         this.cupoMaximo = cupoMaximo;
         this.tour = tour;
     }
-
+//Experto en informacion (GRASP) tiene la info para iterar y calcular cuantos lugares quedan libres
     public int calcularCupoDisponible() {
         int ocupados = 0;
         for (Reserva r : reservas) {
@@ -85,7 +86,7 @@ public class Salida implements Serializable {
         if (dias < 10) {
             throw new ReglaNegocioException("Ya no se aceptan reservas (fuera de término).");
         }
-
+//SOLID (LSK)
         int disponible = calcularCupoDisponible();
         if (r.getCantidadLugaresOcupados() > disponible) {
             throw new CupoExcedidoException("Cupo insuficiente. Quedan " + disponible + " lugares.");
@@ -178,6 +179,20 @@ public class Salida implements Serializable {
             }
         }
         return false;
+    }
+
+    public double calcularTotalAdicionales() {
+        double total = 0.0;
+        for (Reserva r : reservas) {
+            if (r.getEstado() == EstadoReserva.CONFIRMADA || r.getEstado() == EstadoReserva.FINALIZADA) {
+                for (Pasajero p : r.getPasajeros()) {
+                    for (ServicioAdicional s : p.getServicios()) {
+                        total += s.getPrecio();
+                    }
+                }
+            }
+        }
+        return total;
     }
 
     // Getters

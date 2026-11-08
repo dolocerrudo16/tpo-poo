@@ -1,6 +1,10 @@
+//CU01 (Administrar Catálogo de Tours y Tarifas)
+//Guarda la ficha técnica de un viaje (duración, cupos mínimo y máximo, itinerario y tarifas según temporada).
+//SOLID (OCP)
+//GRASP (LSP)
 package modelo.clasesAbstractas;
 
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.enums.CategoriaTour;
 import modelo.personasRoles.Pasajero;
 import modelo.viajesServicios.Actividad;
@@ -38,7 +42,6 @@ public abstract class Tour implements Serializable {
         this.cupoMaximo = cupoMaximo;
     }
 
-    //Un pasajero es válido para el tour si cumple los requisitos de su categoría. Nunca lanza excepciones (LSP).
     public abstract boolean validarPasajero(Pasajero p, LocalDate fechaSalida);
 
     public abstract CategoriaTour getCategoria();
@@ -62,7 +65,7 @@ public abstract class Tour implements Serializable {
             }
         });    }
 
-    //No se permiten tarifas con vigencias superpuestas: a cada fecha le corresponde una única tarifa.
+    //CU07 a cada fecha le corresponde una única tarifa.
     public void agregarTarifa(TarifaTemporada t) throws ReglaNegocioException {
         if (t == null) throw new ReglaNegocioException("La tarifa es obligatoria.");
         for (TarifaTemporada existente : tarifas) {

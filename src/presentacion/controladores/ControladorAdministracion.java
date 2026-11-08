@@ -1,3 +1,5 @@
+//Atiende las tareas administrativas: generar la liquidación de honorarios a los guías y pedir la emisión de reportes.
+//SOLID  (SRP) atiende operaciones de un actor del sistema
 package presentacion.controladores;
 
 import java.util.List;
@@ -45,7 +47,7 @@ public class ControladorAdministracion {
                 }
             }
         }
-
+//GRASP(Experto en informacion)
         double aPagar = guia.calcularHonorario(diasTotales, totalAdicionales);
         LiquidacionGuia liq = new LiquidacionGuia(agencia.getLiquidaciones().size() + 1, LocalDate.now(), aPagar);
         agencia.agregarLiquidacion(liq);

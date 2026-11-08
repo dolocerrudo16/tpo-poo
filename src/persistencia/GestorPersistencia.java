@@ -1,3 +1,5 @@
+//Fabricacion Pura(GRASP) clases de dominio  delegando la persistencia a GestorPersistencia.
+//SOLID (SRP) pesistencia aislada, la agencia no sabe ni abrir archivos
 package persistencia;
 
 import modelo.estructura.Agencia;
@@ -14,13 +16,13 @@ public class GestorPersistencia {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos = new FileOutputStream(archivo);
-            oos = new ObjectOutputStream(fos);
+            fos = new FileOutputStream(archivo); //crea conexion con el archivo
+            oos = new ObjectOutputStream(fos); //convierte objeto en bytes
             oos.writeObject(agencia);
             System.out.println("Datos guardados exitosamente en: " + archivo);
-        } catch (IOException e) {
+        } catch (IOException e) { //fallas de disco
             System.err.println("Error al guardar los datos: " + e.getMessage());
-        } finally {
+        } finally { //cierra el archivo
             try {
                 if (oos != null) {
                     oos.close();
@@ -36,7 +38,7 @@ public class GestorPersistencia {
 
     // Método para cargar el estado del sistema al iniciar el programa
     public Agencia cargar(String archivo) {
-        FileInputStream fis = null;
+        FileInputStream fis = null; //canal de lectura hacia el archivo
         ObjectInputStream ois = null;
         Agencia agenciaCargada = null;
         try {

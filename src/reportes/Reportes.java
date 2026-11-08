@@ -1,3 +1,4 @@
+//SOLID (SRP) Hace estadísticas gerenciales sin tocar otra clase.
 package reportes;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import modelo.reservas.Dinero;
 
 public class Reportes {
 
-    private Agencia agencia;
+    private Agencia agencia; //consulta salidas y reservas
 
     public Reportes(Agencia agencia) {
         this.agencia = agencia;
@@ -76,7 +77,6 @@ public class Reportes {
         System.out.println("Total de ingresos percibidos en el período: " + Dinero.formatear(totalIngresos));
     }
 
-    // CU11: Corrige el filtro temporal evaluando la fecha de cancelación en las notas de ajuste
     public void cancelaciones(LocalDate desde, LocalDate hasta, Tour tour) {
         System.out.println("\nReporte de Cancelaciones");
         int cantCanceladas = 0;

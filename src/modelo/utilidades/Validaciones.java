@@ -1,4 +1,6 @@
-package modelo;
+//Revisa que los textos no vengan vacíos y que los números o tarifas no sean negativos.
+// SOLID (SRP) centraliza validaciones de datos
+package modelo.utilidades;
 
 import excepciones.ReglaNegocioException;
 

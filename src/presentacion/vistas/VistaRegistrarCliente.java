@@ -1,3 +1,4 @@
+//Ventana emergente con campos de texto para cargar los datos de un nuevo cliente y guardarlo.
 package presentacion.vistas;
 
 import excepciones.ReglaNegocioException;

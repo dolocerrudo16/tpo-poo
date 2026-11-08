@@ -1,8 +1,9 @@
+//Es el profesional asignado al viaje; sabe qué categorías de tour puede guiar, tiene un sueldo por día y cobra un 5% extra por cada servicio opcional que consumen los pasajeros.
 package modelo.personasRoles;
 
 import excepciones.ReglaNegocioException;
 import modelo.reservas.Dinero;
-import modelo.Validaciones;
+import modelo.utilidades.Validaciones;
 import modelo.clasesAbstractas.Empleado;
 import modelo.enums.CategoriaTour;
 

@@ -1,3 +1,4 @@
+//(SRP SOLID) Inicialmente reserva calculaba los precios, aplicaba promos y guardaba pagos, para evitar q tenga muchas razones para cambiar lo trajimos aca.
 package modelo.reservas;
 
 import excepciones.ReglaNegocioException;
